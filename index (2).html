@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="manifest" href="manifest.webmanifest">
+<title>RUNISCA PRO</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+:root{--bg:#0b0b0d;--card:#17171b;--card2:#202026;--line:#2a2a31;--o:#ff5a1f;--o2:#ff8a4c;--t:#f5f5f7;--m:#8d8d98;--ok:#36d399;--red:#ef4444;--blue:#4c9aff}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#050506;color:var(--t)}
+button,input,textarea,select{font:inherit;color:inherit;border:0;background:none}
+button{cursor:pointer}button:disabled{opacity:.6;cursor:not-allowed}
+#app-root{max-width:430px;height:100vh;height:100dvh;margin:0 auto;position:relative;overflow:hidden;background:var(--bg)}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden}.scr.on{display:flex}
+.grad{display:block;width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--o2),var(--o) 60%,#d93a00);color:#fff;font-weight:800;font-size:.98rem;text-align:center;box-shadow:0 10px 26px #ff5a1f47}
+.ghost{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:.92rem;margin-top:12px}
+.lbl{font-size:.64rem;color:var(--m);font-weight:800;letter-spacing:.7px}
+.sub{font-size:.8rem;color:var(--m);line-height:1.5}.o{color:var(--o)}
+.note{min-height:1.2em;margin-top:12px;font-size:.82rem;color:var(--o2);text-align:center}
+.link{color:var(--o);font-weight:700;font-size:.82rem}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-name{font-size:2.6rem;font-weight:900;font-style:italic;letter-spacing:-1.5px;line-height:.9}
+.logo-name em{display:block;color:var(--o);font-size:1.7rem;letter-spacing:0}
+#splash{justify-content:flex-end;color:#fff;background:#1a1a1d}
+.sky{position:absolute;inset:0;background:linear-gradient(180deg,#2b1055 0%,#7b2d6b 26%,#e8553a 52%,#ff9a3c 68%,#ffd08a 80%,#2a1a14 80%)}
+#splash .bg-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1200&q=85');background-size:cover;background-position:50% 55%;filter:saturate(1.2) contrast(1.05) sepia(.25);animation:kb 8s ease-out forwards}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
+.sunset{position:absolute;inset:0;background:linear-gradient(180deg,#7b2d6bcc 0%,#ff5a1f99 38%,#ffb04acc 58%,#ffd08a66 70%,transparent 85%);mix-blend-mode:soft-light}
+.sun{position:absolute;left:50%;top:41%;width:300px;height:300px;margin-left:-150px;border-radius:50%;background:radial-gradient(circle,#fff4c9 0,#ffb04a 26%,#ff5a1f55 52%,transparent 70%);mix-blend-mode:screen;opacity:.9;animation:sunp 5s ease-in-out infinite alternate}
+@keyframes sunp{to{transform:scale(1.1);opacity:.7}}
+#splash .shade{position:absolute;inset:0;background:linear-gradient(180deg,#0b0b0d88 0%,#0b0b0d00 22%,#0b0b0d00 50%,#0b0b0dcc 82%,#0b0b0d 100%)}
+.sp-logo{position:absolute;top:calc(70px + env(safe-area-inset-top,0px));left:28px;z-index:2}
+.sp-tag{position:absolute;left:30px;bottom:200px;z-index:2;font-size:.95rem;letter-spacing:2px;font-weight:800;line-height:1.5;text-shadow:0 3px 15px #000}
+.asphalt{position:absolute;left:0;right:0;bottom:0;height:150px;z-index:1;overflow:hidden;background:radial-gradient(#ffffff0f 1px,transparent 1.5px) 0 0/7px 7px,linear-gradient(180deg,#5a3320 0%,#241a16 28%,#0b0b0d 100%)}
+.asphalt::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,#ffb04a,transparent)}
+.asphalt i{position:absolute;bottom:58px;left:0;width:200%;height:5px;border-radius:3px;background:repeating-linear-gradient(90deg,#ffe2b3dd 0 46px,transparent 46px 110px);animation:lane .6s linear infinite;opacity:.6}
+@keyframes lane{to{transform:translateX(-110px)}}
+.sp-sports{position:relative;z-index:2;display:flex;justify-content:space-around;gap:4px;padding:0 12px 16px;font-size:.6rem;font-weight:800;letter-spacing:.5px;text-align:center}
+.sp-sports>div{flex:1}.sp-sports i{display:block;font-size:1.1rem;margin-bottom:6px;color:var(--o2)}
+.sp-bar{position:relative;z-index:2;height:3px;margin:0 24px 26px;background:#ffffff33;border-radius:9px;overflow:hidden}
+.sp-bar i{display:block;height:100%;width:0;background:var(--o);animation:load 2.8s ease forwards}@keyframes load{to{width:100%}}
+.auth-wrap{position:relative;flex:1;overflow-y:auto;padding:58px 26px 30px;display:flex;flex-direction:column}
+.auth-bg{position:absolute;inset:0;background:#0b0b0d url("https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=1000&auto=format&fit=crop") center/cover}
+.auth-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0b0b0dcc 0%,#0b0b0df2 55%,#0b0b0d 100%)}
+.auth-wrap>*{position:relative;z-index:1}.center{text-align:center}
+.auth-title{text-align:center;color:#d6d6dc;font-size:.92rem;margin:14px 0 22px}
+.fld{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 14px;margin-bottom:12px}
+.fld:focus-within{border-color:var(--o)}.fld>i{color:var(--m);width:16px;text-align:center}
+.fld input{flex:1;min-width:0;padding:16px 0;font-size:.92rem;outline:0}.fld .eye{color:var(--m);padding:6px}
+.hdr{display:flex;align-items:center;gap:14px;margin:6px 0 22px}.hdr h2{font-size:1.45rem}.back{font-size:1.1rem;padding:4px;color:var(--t)}
+.foot{text-align:center;font-size:.84rem;color:var(--m);margin-top:22px;line-height:1.6}
+.divider{display:flex;align-items:center;gap:12px;color:var(--m);font-size:.78rem;margin:20px 0 4px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.oauth{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:15px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:.92rem;margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:calc(16px + env(safe-area-inset-top,0px)) 20px 12px;background:linear-gradient(180deg,#2a140c 0%,transparent 100%)}
+.hello{display:flex;align-items:center;gap:12px;min-width:0}.hello b{font-size:1.2rem;display:block}
+.avatar{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(145deg,#ff8a4c,#c83a00) center/cover;font-weight:900;color:#fff;border:2px solid #ffffff22;font-size:1.1rem;box-shadow:0 0 0 3px #ff5a1f22}
+.iconbtn{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:1rem}
+.tags{display:flex;gap:6px;align-items:center}
+.tg{font-size:.62rem;font-weight:900;letter-spacing:.5px;padding:5px 9px;border-radius:99px}
+.tg.off{background:#ef444433;color:#ff8d8d}.tg.pend{background:#ffb04a33;color:#ffc27a}
+main{flex:1;overflow-y:auto;padding:4px 18px 110px;overscroll-behavior:contain}
+.tab{display:none}.tab.on{display:block;animation:fi .3s ease}@keyframes fi{from{opacity:0;transform:translateY(8px)}}
+.title{font-size:1.45rem;font-weight:900;margin:6px 0 14px;letter-spacing:-.4px}
+.card{background:linear-gradient(160deg,#1c1c21,var(--card));border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+.warn{border-color:#ffb04a66;background:#2a2112}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.big{font-size:1.5rem;font-weight:900;letter-spacing:-.4px}.big small{font-size:.72rem;color:var(--m);font-weight:700;margin-left:3px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:#ff5a1f22;color:var(--o2);border-radius:99px;padding:6px 12px;font-size:.74rem;font-weight:800}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:4px}
+.kpi{min-width:0;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px 10px}
+.kpi .big{font-size:1.1rem;overflow-wrap:anywhere}.kpi .d{font-size:.64rem;font-weight:800;margin-top:6px}
+.up{color:var(--ok)}.down{color:var(--red)}
+.last{background:radial-gradient(circle at 100% 0,#ff5a1f33,transparent 55%),linear-gradient(160deg,#1f1a18,var(--card));border-color:#3a2418}
+.goal{display:flex;gap:16px;align-items:center;background:linear-gradient(120deg,#3a1a10,#17171b 75%);border-color:#4a2418}
+.ringp{--p:0;width:92px;height:92px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--o) calc(var(--p)*1%),#2a2a31 0)}
+.ringp b{width:74px;height:74px;border-radius:50%;background:#1a1210;display:grid;place-items:center;font-size:1.15rem;font-weight:900}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:9px 16px;font-size:.8rem;font-weight:700;color:var(--m)}
+.chip.on{background:var(--o);border-color:var(--o);color:#fff}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 14px;margin-bottom:12px}
+.search input{flex:1;min-width:0;padding:14px 0;font-size:.9rem;outline:0}
+.empty{text-align:center;color:var(--m);border:1px dashed var(--line);border-radius:18px;padding:28px 16px;font-size:.86rem;margin-bottom:14px}
+.empty>i{font-size:1.6rem;color:var(--o);margin-bottom:10px;display:block}
+.bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px}
+.bars>div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:.6rem;color:var(--m)}
+.bars b{width:100%;max-width:26px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--o2),var(--o));min-height:3px}
+.hist{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.hist:last-child{border:0}.hist .hi{width:40px;height:40px;border-radius:12px;background:#ff5a1f22;color:var(--o2);display:grid;place-items:center;flex:none}
+.hist .hm{flex:1;min-width:0}.hist h4{font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai{background:linear-gradient(135deg,#1b1f3a,#17171b 70%);border-color:#2f3a74}
+.ai .lbl{color:#8fb0ff}.ai h3{font-size:1rem;margin:6px 0 4px}
+.route{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px;cursor:pointer}
+.route .map{position:relative;height:160px;background:linear-gradient(#ffffff08 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,#ffffff08 1px,transparent 1px) 0 0/28px 28px,radial-gradient(circle at 30% 20%,#1d2a1f,#101312 70%);display:grid;place-items:center}
+.route .map svg{width:100%;height:100%}
+.rb{position:absolute;top:10px;left:10px;background:#000a;border-radius:99px;padding:5px 11px;font-size:.68rem;font-weight:800;color:var(--o2)}
+.rb2{position:absolute;top:10px;right:10px;background:#4c9aff33;border-radius:99px;padding:5px 11px;font-size:.68rem;font-weight:800;color:#9fc2ff}
+.rd{position:absolute;right:12px;bottom:8px;font-size:1.5rem;font-weight:900;font-style:italic}.rd small{font-size:.7rem;color:var(--m);margin-left:2px}
+.route .info{padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.route h3{font-size:.95rem;margin-bottom:6px}.meta{font-size:.74rem;color:var(--m);display:flex;gap:10px;flex-wrap:wrap}.meta i{color:var(--o2)}
+.btn-s{flex:none;border-radius:12px;padding:11px 14px;background:var(--o);color:#fff;font-weight:800;font-size:.8rem}
+.livecard{display:flex;gap:14px;align-items:center;border-color:#ff5a1f66;background:linear-gradient(135deg,#2a140c,#17171b)}
+.livecard .th{width:96px;height:80px;border-radius:12px;background:#101312;display:grid;place-items:center;overflow:hidden;flex:none}
+.rec-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);margin-right:6px;animation:blink 1s infinite}@keyframes blink{50%{opacity:.2}}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px 4px;border:1px solid var(--line);background:var(--card2);border-radius:14px;color:var(--m);font-size:.6rem;font-weight:800;min-width:0;text-align:center;line-height:1.2}
+.tile i{font-size:1.15rem}.tile.on{border-color:var(--o);color:var(--o);background:#ff5a1f14}
+.cat{grid-column:1/-1;font-size:.66rem;color:var(--o2);font-weight:900;letter-spacing:.8px;margin:10px 0 0}
+#recscr{position:absolute;inset:0;z-index:30;display:none;background:#050506}#recscr.on{display:block}
+#recscr::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:400;background:linear-gradient(180deg,#000a 0,transparent 22%,transparent 50%,#000d 100%)}
+#liveMap{position:absolute;inset:0;z-index:0;background:linear-gradient(#ffffff0a 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,#ffffff0a 1px,transparent 1px) 0 0/40px 40px,#0b0d0c}
+#recscr.sat .leaflet-tile-pane{filter:brightness(.62) saturate(1.2) contrast(1.05)}
+#recscr:not(.sat) .leaflet-tile-pane,#dmap .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.7)}
+.rtop{position:absolute;top:0;left:0;right:0;z-index:500;padding:calc(12px + env(safe-area-inset-top,0px)) 12px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rpill{display:flex;align-items:center;gap:8px;height:48px;padding:0 14px;border-radius:24px;background:#0d0d10cc;border:1px solid #ffffff2e;backdrop-filter:blur(8px);font-weight:800;font-size:.8rem;letter-spacing:.3px;white-space:nowrap;max-width:44%}
+.rpill span{overflow:hidden;text-overflow:ellipsis}.rpill i{color:var(--o);font-size:1.1rem}.rpill .chv{color:var(--m);font-size:.7rem}
+.rlogo{font-weight:900;font-style:italic;font-size:1.05rem;letter-spacing:-.5px;line-height:1;cursor:pointer;text-shadow:0 2px 8px #000}.rlogo em{color:var(--o);font-size:.7rem;margin-left:2px}
+.rside{position:absolute;z-index:500;display:flex;flex-direction:column;gap:10px;top:calc(76px + env(safe-area-inset-top,0px))}
+.rl{left:12px}.rr{right:12px}
+.rbox{width:52px;border-radius:16px;background:#0d0d10cc;border:1px solid #ffffff2e;backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:.62rem;font-weight:800;padding:8px 0}
+.rbox i{font-size:1.05rem}.rr .rbox{border-radius:50%;width:48px;height:48px;font-size:1.05rem}
+.rr .special{border-color:var(--o);color:var(--o);box-shadow:0 0 18px #ff5a1f66;background:#2a140ccc}
+.sig{display:flex;align-items:flex-end;gap:2px;height:12px}.sig i{width:4px;background:#555;border-radius:1px;font-size:0}
+.sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:6px}.sig i:nth-child(3){height:8px}.sig i:nth-child(4){height:10px}.sig i:nth-child(5){height:12px}.sig i.on{background:var(--ok)}
+.rpanel{position:absolute;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:500}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);background:#0d0d10e6;border:1px solid #ffffff26;border-radius:22px;backdrop-filter:blur(10px);margin-bottom:12px}
+.rs{display:flex;align-items:center;gap:8px;padding:12px 10px;min-width:0}
+.rs:nth-child(-n+3){border-bottom:1px solid #ffffff1a}.rs:not(:nth-child(3n+1)){border-left:1px solid #ffffff1a}
+.rs>i{color:var(--o);font-size:1.2rem;flex:none}
+.rs b{display:block;font-size:1.15rem;font-weight:800;white-space:nowrap}.rs b small{font-size:.62rem;font-weight:600;margin-left:2px}
+.rs em{font-style:normal}.rs p{font-size:.6rem;color:var(--m);font-weight:700;letter-spacing:.3px}
+.rctl{display:flex;align-items:center;justify-content:center;gap:34px;margin-bottom:10px}
+.rctl .sm{width:54px;height:54px;border-radius:50%;background:#0d0d10cc;border:1px solid #ffffff2e;color:#ddd;font-size:1.1rem}
+.rctl .rgo{width:82px;height:82px;border-radius:50%;border:4px solid var(--o);background:#1a0c06;color:var(--o);font-size:1.8rem;box-shadow:0 0 28px #ff5a1f66,inset 0 0 18px #ff5a1f33}
+.rprog{display:flex;justify-content:space-between;font-size:.66rem;font-weight:800;color:var(--o);letter-spacing:.4px}.rprog span:last-child{color:var(--m)}
+.rbar{height:3px;background:#ffffff26;border-radius:3px;margin:6px 0 4px;overflow:hidden}.rbar i{display:block;height:100%;width:0;background:var(--o)}
+#recscr.locked .nl{pointer-events:none;opacity:.4}
+.pulse{position:relative;width:28px;height:28px}
+.pulse b{position:absolute;inset:6px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 0 12px var(--red)}
+.pulse i{position:absolute;inset:0;border-radius:50%;background:#ef444477;animation:pls 1.8s ease-out infinite}
+@keyframes pls{0%{transform:scale(.5);opacity:.9}100%{transform:scale(3.4);opacity:0}}
+.arr{color:#ffb27a;font-size:.8rem;text-shadow:0 0 6px #000;width:14px;height:14px;line-height:14px;text-align:center}
+@media(max-height:700px){.rs{padding:8px}.rctl .rgo{width:68px;height:68px}.rctl{margin-bottom:6px}}
+.full{position:absolute;inset:0;z-index:60;display:none;flex-direction:column;background:var(--bg)}.full.on{display:flex}
+#livescr{background:radial-gradient(circle at 50% 0,#3a1a10 0,#0b0b0d 62%);padding:calc(18px + env(safe-area-inset-top,0px)) 22px calc(26px + env(safe-area-inset-bottom,0px))}
+.lv-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lv-min{width:44px;height:44px;border-radius:50%;background:#ffffff14;border:1px solid #ffffff26;font-size:1.1rem;flex:none}
+.lv-sport{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.9rem;color:var(--o2);flex:1;justify-content:center}
+.lv-state{font-size:.68rem;font-weight:900;letter-spacing:1px;padding:6px 10px;border-radius:99px;background:#ff5a1f22;color:var(--o2);flex:none}
+.lv-state.paused{background:#ef444433;color:#ff8d8d}
+.lv-body{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;text-align:center}
+.lv-b .lbl{font-size:.78rem;letter-spacing:2px}
+.lv-b .num{font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1.05}
+.lv-b.t .num{font-size:5.4rem}.lv-b.k .num{font-size:5rem;color:var(--o)}.lv-b.p .num{font-size:4.2rem}
+.lv-b .num small{font-size:1.3rem;color:var(--m);font-weight:700;letter-spacing:0;margin-left:4px}
+.lv-b+.lv-b{border-top:1px solid #ffffff14;padding-top:14px}
+.lv-say{min-height:2.6em;font-size:.76rem;color:var(--o2);text-align:center;margin-bottom:12px;line-height:1.4}
+.lv-ctl{display:flex;align-items:center;justify-content:center;gap:34px}
+.lv-ctl .pause{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--o2),var(--o));color:#fff;font-size:2rem;box-shadow:0 10px 30px #ff5a1f66}
+.lv-ctl .stop{width:70px;height:70px;border-radius:50%;background:#2a1212;border:2px solid var(--red);color:var(--red);font-size:1.3rem}
+@media(max-height:700px){.lv-b.t .num{font-size:4.2rem}.lv-b.k .num{font-size:3.8rem}.lv-b.p .num{font-size:3.2rem}.lv-ctl .pause{width:78px;height:78px}}
+#mini{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top,0px));z-index:70;display:none;align-items:center;gap:12px;padding:10px 14px;border-radius:18px;background:#1a0c06f2;border:1px solid var(--o);box-shadow:0 8px 24px #000a;font-weight:800;font-size:.85rem}
+#mini.on{display:flex}#mini .mi{flex:1;min-width:0}#mini small{display:block;color:var(--m);font-weight:600;font-size:.68rem}
+#savescr{overflow-y:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(30px + env(safe-area-inset-bottom,0px))}
+#savescr h2{font-size:1.5rem;margin-bottom:4px}
+#savescr label,.sheet label{display:block;font-size:.72rem;font-weight:800;color:var(--m);margin:16px 0 6px}
+#savescr input[type=text],#savescr textarea,#savescr select,.sheet input[type=text],.sheet textarea,.sheet select{width:100%;background:#0f0f12;border:1px solid var(--line);border-radius:12px;padding:13px;outline:0;font-size:.92rem}
+#savescr input:focus,#savescr textarea:focus,.sheet input:focus,.sheet textarea:focus{border-color:var(--o)}
+.feels{display:flex;gap:8px}.feel{flex:1;font-size:1.5rem;padding:10px 0;border-radius:12px;background:var(--card2);border:1px solid var(--line);opacity:.6}.feel.on{opacity:1;border-color:var(--o);background:#ff5a1f1a}
+input[type=range]{accent-color:#ff5a1f;width:100%}
+.photos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ph{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card2)}.ph img{width:100%;height:100%;object-fit:cover}
+.ph button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#000b;color:#fff;font-size:.7rem}
+.ph.add{display:grid;place-items:center;border:1px dashed var(--o);color:var(--o);font-size:1.4rem;cursor:pointer}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;margin-bottom:16px;background:var(--card);border-radius:14px;padding:4px}
+.seg button{padding:11px 0;color:var(--m);font-weight:800;font-size:.9rem;border-radius:11px}.seg button.on{background:var(--o);color:#fff}
+.grp{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:13px;margin-bottom:12px;cursor:pointer}
+.gimg{width:62px;height:62px;border-radius:16px;flex:none;display:grid;place-items:center;background:linear-gradient(145deg,var(--o2),#8a2a00);color:#fff;font-size:1.3rem}
+.grp:nth-child(3n+2) .gimg{background:linear-gradient(145deg,#4c9aff,#1b3f8a)}.grp:nth-child(3n) .gimg{background:linear-gradient(145deg,#36d399,#0d6b4a)}
+.gi{flex:1;min-width:0}.gi h4{font-size:.95rem;margin-bottom:4px}.gi .sub{font-size:.74rem;overflow-wrap:anywhere}.chev{color:var(--m)}
+.prof{text-align:center;padding:0 16px 16px;overflow:hidden;position:relative}
+.cover{height:96px;margin:0 -16px;background:radial-gradient(circle at 80% 0,#ff8a4c88,transparent 60%),linear-gradient(135deg,#5a1d08,#1a0d08)}
+.prof .avatar{width:92px;height:92px;margin:-46px auto 12px;font-size:2rem;border:4px solid var(--card);position:relative}
+.prof h2{font-size:1.35rem}.bio{font-size:.82rem;color:#cfcfd6;margin:8px auto 0;max-width:290px;line-height:1.45}
+.editbtn{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:#000a;border:1px solid #ffffff33;z-index:2}
+.badge{display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:linear-gradient(90deg,#ff5a1f,#ff8a4c);color:#fff;border-radius:99px;padding:7px 15px;font-size:.72rem;font-weight:900;letter-spacing:.5px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;margin-top:18px}.stats3 .big{font-size:1.25rem}
+.xp{height:8px;border-radius:9px;background:#2a2a31;overflow:hidden;margin-top:10px}.xp i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--o),var(--o2));border-radius:9px;transition:width .6s}
+.tierh{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;font-size:.8rem;font-weight:900;letter-spacing:.5px}
+.ach{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card2);margin-bottom:8px}
+.ach .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:1.1rem;background:#17171b;color:#4a4a55;border:2px solid var(--line)}
+.ach.on .ic{color:#fff;border-color:var(--tc);background:var(--tc);box-shadow:0 0 14px var(--tc)}
+.ach .am{flex:1;min-width:0}.ach b{font-size:.86rem;display:block}.ach .sub{font-size:.72rem}
+.pg{height:5px;border-radius:5px;background:#2a2a31;margin-top:7px;overflow:hidden}.pg i{display:block;height:100%;background:var(--tc);border-radius:5px}
+.ach:not(.on) b{color:#bdbdc6}
+nav{position:absolute;left:0;right:0;bottom:0;height:calc(72px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);display:flex;align-items:center;justify-content:space-around;background:#111114ee;border-top:1px solid var(--line);z-index:20;backdrop-filter:blur(8px)}
+nav button{flex:1;height:100%;color:var(--m);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:.66rem;font-weight:700}
+nav button i{font-size:1.15rem}nav button.on{color:var(--o)}
+nav .rec{flex:none;width:62px;height:62px;margin-top:-30px;border-radius:50%;background:linear-gradient(135deg,var(--o2),var(--o));color:#fff;box-shadow:0 8px 22px #ff5a1f66;font-size:1.3rem}nav .rec.on{color:#fff}
+.ov{position:absolute;inset:0;background:#000b;display:none;align-items:flex-end;z-index:80}.ov.on{display:flex}
+.sheet{width:100%;max-height:90%;overflow-y:auto;background:var(--card);border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet h3{font-size:1.1rem;margin-bottom:4px}
+.x{float:right;width:34px;height:34px;border-radius:50%;background:var(--card2);color:var(--t)}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.opt b{font-size:.9rem;display:block}.opt .sub{font-size:.74rem}
+.opt input[type=checkbox]{width:24px;height:24px;accent-color:#ff5a1f;flex:none}.opt select{width:auto!important;padding:9px!important}
+#sportSearch{margin:14px 0 4px}
+#dmap{height:220px;border-radius:16px;overflow:hidden;margin:14px 0;border:1px solid var(--line)}
+.avbig{width:96px;height:96px;margin:6px auto 4px;border-radius:50%;background:linear-gradient(145deg,#ff8a4c,#c83a00) center/cover;display:grid;place-items:center;font-size:2.2rem;font-weight:900;border:3px solid var(--o)}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:96px;background:#24242b;border:1px solid var(--o);padding:11px 15px;border-radius:12px;font-size:.82rem;display:none;z-index:99;max-width:88%;text-align:center}.toast.on{display:block}
+@media(max-width:360px){.auth-wrap{padding-left:18px;padding-right:18px}main{padding-left:12px;padding-right:12px}.kpis{gap:5px}.kpi{padding:10px 6px}.sp-logo{left:20px}.sp-tag{left:22px}}
+.home-hero{position:relative;isolation:isolate;min-height:305px;overflow:hidden;border:1px solid #ffffff22;border-radius:24px;margin:2px 0 18px;background:#16100e;box-shadow:0 14px 34px #0007}
+.home-hero-photo{position:absolute;inset:0;z-index:-2;background-image:url("https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1200&q=88");background-size:cover;background-position:center 55%;transform:scale(1.02);filter:saturate(1.12) contrast(1.06)}
+.home-hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#080809ed 0%,#080809c9 42%,#08080945 78%,#08080918 100%),linear-gradient(0deg,#080809e8 0%,transparent 54%)}
+.home-hero-content{padding:22px 18px 66px;max-width:340px}
+.home-hero-kicker{display:inline-flex;align-items:center;gap:7px;color:#ffb08a;background:#1a100dd9;border:1px solid #ff8a4c55;border-radius:999px;padding:7px 10px;font-size:.62rem;letter-spacing:.55px;font-weight:900}
+.home-hero h1{font-size:clamp(1.6rem,7vw,2.2rem);line-height:1.04;letter-spacing:-.8px;margin:20px 0 9px;font-weight:950;text-shadow:0 3px 18px #000}
+.home-hero p{font-size:.82rem;line-height:1.45;color:#f0e9e6;max-width:245px;text-shadow:0 2px 8px #000}
+.home-cta{margin-top:16px;display:inline-flex;align-items:center;gap:9px;padding:13px 16px;border-radius:12px;background:linear-gradient(135deg,var(--o2),var(--o));color:#fff;font-size:.78rem;font-weight:900;letter-spacing:.3px;box-shadow:0 7px 22px #ff5a1f55}
+.home-hero-footer{position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;gap:8px;color:#fff;font-size:.6rem;letter-spacing:.55px;font-weight:900;text-shadow:0 2px 8px #000}
+.home-hero-footer span{display:flex;align-items:center;gap:6px}.home-hero-footer i{color:var(--o2)}
+#dbWarn{display:none!important}
+@media(max-height:740px){.home-hero{min-height:270px}.home-hero-content{padding-top:18px}.home-hero h1{margin-top:14px}}
+</style>
+</head>
+<body>
+<div id="app-root">
+
+<section class="scr on" id="splash" onclick="splashSkip()">
+  <div class="sky"></div><div class="bg-img"></div><div class="sunset"></div><div class="sun"></div><div class="shade"></div>
+  <div class="sp-logo"><div class="logo">
+    <svg width="52" height="44" viewBox="0 0 64 54" aria-hidden="true"><path d="M4 50 L22 4 H34 L16 50Z" fill="#ff5a1f"/><path d="M26 50 L44 4 H56 L38 50Z" fill="#ffb04a"/></svg>
+    <div class="logo-name">RUNISCA<em>PRO</em></div></div></div>
+  <div class="sp-tag">MAIS QUE KM,<br>É EVOLUÇÃO.</div>
+  <div class="asphalt"><i></i></div>
+  <div class="sp-sports">
+    <div><i class="fa-solid fa-person-running"></i>CORRIDA</div><div><i class="fa-solid fa-person-biking"></i>CICLISMO</div>
+    <div><i class="fa-solid fa-person-swimming"></i>NATAÇÃO</div><div><i class="fa-solid fa-medal"></i>TRIATLO</div>
+  </div>
+  <div class="sp-bar"><i></i></div>
+</section>
+
+<section class="scr" id="login"><div class="auth-bg"></div><div class="auth-wrap">
+  <div class="center" style="margin-top:20px"><div class="logo" style="justify-content:center">
+    <svg width="46" height="40" viewBox="0 0 64 54" aria-hidden="true"><path d="M4 50 L22 4 H34 L16 50Z" fill="#ff5a1f"/><path d="M26 50 L44 4 H56 L38 50Z" fill="#ff8a4c"/></svg>
+    <div class="logo-name" style="font-size:2.2rem">RUNISCA<em style="font-size:1.2rem">PRO</em></div></div></div>
+  <p class="auth-title">Conecte-se com sua melhor versão.</p>
+  <form id="loginForm">
+    <div class="fld"><i class="fa-regular fa-user"></i><input id="lEmail" type="email" placeholder="E-mail" autocomplete="email" required></div>
+    <div class="fld"><i class="fa-solid fa-lock"></i><input id="lPass" type="password" placeholder="Senha" minlength="6" autocomplete="current-password" required>
+      <button type="button" class="eye" onclick="eye('lPass',this)" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button></div>
+    <button class="grad" type="submit" id="lBtn">Entrar</button><p class="note" id="lNote"></p>
+  </form>
+  <div class="center"><button class="link" type="button" onclick="show('forgot')">Esqueceu sua senha?</button></div>
+  <div class="divider">ou</div>
+  <button class="oauth" type="button" onclick="oauth('google')"><i class="fa-brands fa-google" style="color:#ea4335"></i>Continuar com Google</button>
+  <button class="oauth" type="button" onclick="oauth('apple')"><i class="fa-brands fa-apple"></i>Continuar com Apple</button>
+  <p class="foot">Ainda não tem uma conta? <button class="link" type="button" onclick="show('register')">Registre-se</button></p>
+</div></section>
+
+<section class="scr" id="register"><div class="auth-bg"></div><div class="auth-wrap">
+  <div class="hdr"><button class="back" type="button" onclick="show('login')" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></button><h2>Criar conta</h2></div>
+  <p class="sub" style="margin:-10px 0 22px">Junte-se a atletas que já estão evoluindo com a RUNISCA.</p>
+  <form id="regForm">
+    <div class="fld"><i class="fa-regular fa-user"></i><input id="rName" placeholder="Nome completo" maxlength="40" autocomplete="name" required></div>
+    <div class="fld"><i class="fa-regular fa-envelope"></i><input id="rEmail" type="email" placeholder="E-mail" autocomplete="email" required></div>
+    <div class="fld"><i class="fa-solid fa-phone"></i><input id="rPhone" type="tel" placeholder="Telefone" autocomplete="tel"></div>
+    <div class="fld"><i class="fa-solid fa-lock"></i><input id="rPass" type="password" placeholder="Senha" minlength="6" autocomplete="new-password" required>
+      <button type="button" class="eye" onclick="eye('rPass',this)" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button></div>
+    <div class="fld"><i class="fa-solid fa-lock"></i><input id="rPass2" type="password" placeholder="Confirmar senha" minlength="6" autocomplete="new-password" required>
+      <button type="button" class="eye" onclick="eye('rPass2',this)" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button></div>
+    <button class="grad" type="submit" id="rBtn" style="margin-top:6px">Registrar</button><p class="note" id="rNote"></p>
+  </form>
+  <p class="foot" style="margin-top:18px">Ao se cadastrar, você concorda com nossos termos de uso e política de privacidade.</p>
+  <p class="foot">Já tem uma conta? <button class="link" type="button" onclick="show('login')">Entrar</button></p>
+</div></section>
+
+<section class="scr" id="forgot"><div class="auth-bg"></div><div class="auth-wrap">
+  <div class="hdr"><button class="back" type="button" onclick="show('login')" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></button><h2>Recuperar senha</h2></div>
+  <p class="sub" style="margin:-10px 0 22px">Enviaremos um link para o seu e-mail.</p>
+  <form id="fgForm"><div class="fld"><i class="fa-regular fa-envelope"></i><input id="fEmail" type="email" placeholder="E-mail" autocomplete="email" required></div>
+    <button class="grad" type="submit" id="fBtn">Enviar link</button><p class="note" id="fNote"></p></form>
+</div></section>
+
+<section class="scr" id="reset"><div class="auth-bg"></div><div class="auth-wrap">
+  <div class="hdr"><h2>Nova senha</h2></div>
+  <form id="rsForm">
+    <div class="fld"><i class="fa-solid fa-lock"></i><input id="nPass" type="password" placeholder="Nova senha" minlength="6" autocomplete="new-password" required></div>
+    <div class="fld"><i class="fa-solid fa-lock"></i><input id="nPass2" type="password" placeholder="Confirmar nova senha" minlength="6" autocomplete="new-password" required></div>
+    <button class="grad" type="submit">Salvar nova senha</button><p class="note" id="rsNote"></p>
+  </form>
+</div></section>
+
+<section class="scr" id="app">
+  <header class="top">
+    <div class="hello"><div class="avatar" id="hAv" onclick="go('perfil')">A</div>
+      <div><span class="sub" style="font-size:.74rem">Disciplina hoje, resultados amanhã.</span><b id="hello">Olá, atleta!</b></div></div>
+    <div class="tags"><span class="tg off" id="tgOff" style="display:none">OFFLINE</span><span class="tg pend" id="tgPend" style="display:none"></span>
+    <button class="iconbtn" aria-label="Configurações" onclick="openSettings()"><i class="fa-solid fa-gear"></i></button></div>
+  </header>
+  <main>
+    <section class="tab on" id="t-inicio">
+      <section class="home-hero" aria-label="Corredor correndo no asfalto">
+        <div class="home-hero-photo"></div><div class="home-hero-shade"></div>
+        <div class="home-hero-content">
+          <span class="home-hero-kicker"><i class="fa-solid fa-person-running"></i> RUNISCA PRO · CORRA NO SEU RITMO</span>
+          <h1>Seu próximo<br>quilômetro começa aqui.</h1>
+          <p>Calce o tênis, encontre o asfalto e registre sua evolução.</p>
+          <button type="button" class="home-cta" onclick="go('gravar')"><i class="fa-solid fa-circle-play"></i> COMEÇAR TREINO</button>
+        </div>
+        <div class="home-hero-footer"><span><i class="fa-solid fa-location-crosshairs"></i> GPS REAL</span><span><i class="fa-solid fa-route"></i> CADA KM CONTA</span></div>
+      </section>
+      <div id="dbWarn" aria-hidden="true"></div>
+      <div class="card last" id="lastCard"></div>
+      <div class="lbl" style="margin:4px 2px 10px">RESUMO DA SEMANA</div>
+      <div class="kpis" id="weekKpis"></div>
+      <div class="card" style="margin-top:14px;padding:14px"><div class="lbl" style="margin-bottom:4px">DISTÂNCIA · 7 DIAS</div><div class="bars" id="wkChart"></div></div>
+      <div class="card goal"><div class="ringp" id="gRing"><b id="goalPct">0%</b></div>
+        <div><div class="lbl" style="color:var(--o2)">META SEMANAL</div><div class="big" id="goalTxt">20 km</div>
+        <div class="sub" id="goalSub"></div><div class="sub" id="streak" style="margin-top:4px"></div></div></div>
+      <div class="card"><div class="lbl" style="margin-bottom:6px">ATIVIDADES RECENTES</div><div id="recent"></div></div>
+    </section>
+
+    <section class="tab" id="t-rotas">
+      <div class="title">Rotas</div>
+      <div id="liveRoute"></div>
+      <div class="card ai" id="aiCard"></div>
+      <div class="search"><i class="fa-solid fa-magnifying-glass" style="color:var(--m)"></i><input id="rq" placeholder="Buscar rotas..." autocomplete="off"></div>
+      <div class="chips" id="rChips"></div><div id="routeList"></div>
+    </section>
+
+    <section class="tab" id="t-grupos">
+      <div class="row" style="margin:6px 0 14px"><div class="title" style="margin:0">Grupos</div>
+        <button class="iconbtn" style="background:var(--o);border:0;color:#fff" onclick="openSheet('gc')" aria-label="Criar grupo"><i class="fa-solid fa-plus"></i></button></div>
+      <div class="seg"><button id="gt1" class="on" onclick="gTab('mine')">Meus grupos</button><button id="gt2" onclick="gTab('all')">Explorar</button></div>
+      <div id="groupList"></div>
+    </section>
+
+    <section class="tab" id="t-perfil">
+      <div class="card prof">
+        <button class="editbtn" onclick="openEdit()" aria-label="Editar perfil"><i class="fa-solid fa-pen"></i></button>
+        <div class="cover"></div><div class="avatar" id="pAv">A</div>
+        <h2 id="pName">Atleta</h2><div class="sub" id="pHandle"></div><div class="bio" id="pBio"></div>
+        <div><span class="badge"><i class="fa-solid fa-medal"></i> <span id="lvName">INICIANTE</span></span></div>
+        <div class="stats3">
+          <div><div class="big" id="pCount">0</div><div class="lbl">ATIVIDADES</div></div>
+          <div><div class="big" id="pKm">0</div><div class="lbl">KM TOTAIS</div></div>
+          <div><div class="big" id="pGroups">0</div><div class="lbl">GRUPOS</div></div>
+        </div>
+      </div>
+      <div class="card"><div class="row"><div class="lbl">NÍVEL</div><span class="sub" id="lvNext"></span></div><div class="xp"><i id="xpBar"></i></div></div>
+      <div class="lbl" style="margin:4px 2px 10px">RECORDES PESSOAIS</div>
+      <div class="kpis" id="prs" style="margin-bottom:14px"></div>
+      <div class="card"><div class="row"><div class="lbl">CONQUISTAS</div><span class="sub" id="achCount"></span></div>
+        <div class="chips" id="achChips" style="margin-top:10px"></div><div id="achList"></div></div>
+      <button class="ghost" style="margin-top:0" onclick="openSettings()"><i class="fa-solid fa-gear"></i> Configurações</button>
+    </section>
+  </main>
+
+  <section id="recscr" class="sat">
+    <div id="liveMap"></div>
+    <div class="rtop">
+      <button class="rpill nl" onclick="openSheet('sport')"><i class="fa-solid fa-person-running" id="sportIco"></i><span id="sportLbl">CORRIDA</span><i class="fa-solid fa-chevron-right chv"></i></button>
+      <div class="rlogo" onclick="go('inicio')">RUNISCA<em>PRO</em></div>
+      <button class="rpill nl" onclick="go('rotas')"><i class="fa-solid fa-route"></i><span>ROTAS</span><i class="fa-solid fa-chevron-right chv"></i></button>
+    </div>
+    <div class="rside rl">
+      <div class="rbox"><i class="fa-solid fa-satellite-dish"></i><span id="gpsLabel">GPS</span><div class="sig" id="sig"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="rbox"><i class="fa-solid fa-cloud-sun" id="wIco"></i><span id="wTxt">—</span></div>
+    </div>
+    <div class="rside rr">
+      <button class="rbox nl" onclick="recenter()" aria-label="Centralizar"><i class="fa-solid fa-location-arrow"></i></button>
+      <button class="rbox nl" onclick="toggleLayer()" aria-label="Camadas"><i class="fa-solid fa-layer-group"></i></button>
+      <button class="rbox nl special" onclick="openSheet('special')" aria-label="Especial"><i class="fa-solid fa-bolt"></i></button>
+      <button class="rbox nl" id="expBtn" style="display:none" onclick="expandLive()" aria-label="Voltar à atividade"><i class="fa-solid fa-expand"></i></button>
+    </div>
+    <div class="rpanel">
+      <div class="rstats">
+        <div class="rs"><i class="fa-solid fa-person-running"></i><div><b><em id="mKm">0,00</em><small>km</small></b><p>DISTÂNCIA</p></div></div>
+        <div class="rs"><i class="fa-regular fa-clock"></i><div><b><em id="mTm">00:00</em></b><p>TEMPO</p></div></div>
+        <div class="rs"><i class="fa-solid fa-gauge-high"></i><div><b><em id="mPc">—</em><small>/km</small></b><p>RITMO ATUAL</p></div></div>
+        <div class="rs"><i class="fa-solid fa-mountain"></i><div><b><em id="mEl">—</em><small>m</small></b><p>ELEVAÇÃO</p></div></div>
+        <div class="rs"><i class="fa-solid fa-fire"></i><div><b><em id="mKc">0</em><small>kcal</small></b><p>CALORIAS</p></div></div>
+        <div class="rs" onclick="connectHR()"><i class="fa-solid fa-heart"></i><div><b><em id="mHr">—</em><small>bpm</small></b><p>FC (opcional)</p></div></div>
+      </div>
+      <div class="rctl">
+        <button class="sm" onclick="recLock()" aria-label="Bloquear"><i class="fa-solid fa-lock" id="lockI"></i></button>
+        <button class="rgo nl" onclick="mainBtn()" aria-label="Iniciar ou pausar"><i class="fa-solid fa-play" id="pIcon"></i></button>
+        <button class="sm nl" onclick="stopBtn()" aria-label="Finalizar"><i class="fa-solid fa-stop"></i></button>
+      </div>
+      <div class="rprog"><span id="recState">PRONTO PARA INICIAR</span><span id="recClock">00:00:00</span></div>
+      <div class="rbar"><i id="recBar"></i></div>
+    </div>
+  </section>
+
+  <nav>
+    <button class="on" data-t="inicio" onclick="go('inicio')"><i class="fa-solid fa-house"></i>Início</button>
+    <button data-t="rotas" onclick="go('rotas')"><i class="fa-solid fa-route"></i>Rotas</button>
+    <button class="rec" data-t="gravar" onclick="go('gravar')" aria-label="Gravar"><i class="fa-solid fa-circle-dot"></i></button>
+    <button data-t="grupos" onclick="go('grupos')"><i class="fa-solid fa-users"></i>Grupos</button>
+    <button data-t="perfil" onclick="go('perfil')"><i class="fa-solid fa-user"></i>Perfil</button>
+  </nav>
+
+  <div id="mini" onclick="expandLive()"><i class="fa-solid fa-person-running o" id="miIco" style="font-size:1.3rem"></i>
+    <div class="mi"><span id="miT">00:00 · 0,00 km</span><small id="miS">Atividade em andamento — toque para abrir</small></div><i class="fa-solid fa-expand"></i></div>
+
+  <section class="full" id="livescr">
+    <div class="lv-head">
+      <button class="lv-min" onclick="minimizeLive()" aria-label="Minimizar e ver o percurso"><i class="fa-solid fa-chevron-down"></i></button>
+      <div class="lv-sport"><i class="fa-solid fa-person-running" id="lvIco"></i><span id="lvSport">CORRIDA</span></div>
+      <div class="lv-state" id="lvState">EM ANDAMENTO</div>
+    </div>
+    <div class="lv-body">
+      <div class="lv-b t"><div class="lbl">TEMPO</div><div class="num" id="lvTime">00:00</div></div>
+      <div class="lv-b k"><div class="lbl">DISTÂNCIA</div><div class="num"><span id="lvKm">0,00</span><small>km</small></div></div>
+      <div class="lv-b p"><div class="lbl">RITMO ATUAL</div><div class="num"><span id="lvPace">—</span><small>/km</small></div></div>
+    </div>
+    <div class="lv-say" id="lvSay"></div>
+    <div class="lv-ctl">
+      <button class="stop" onclick="recStop()" aria-label="Finalizar"><i class="fa-solid fa-stop"></i></button>
+      <button class="pause" onclick="recPause()" aria-label="Pausar ou continuar"><i class="fa-solid fa-pause" id="lvPlay"></i></button>
+      <div style="width:70px"></div>
+    </div>
+  </section>
+
+  <section class="full" id="savescr">
+    <h2>Treino finalizado 🎉</h2><div class="sub" id="saveInfo"></div>
+    <label for="sTitle">TÍTULO DO TREINO</label><input id="sTitle" type="text" maxlength="70" placeholder="Ex.: Tiro no parque">
+    <label for="sNote">DESCRIÇÃO / COMO FOI O TREINO?</label><textarea id="sNote" rows="4" maxlength="500" placeholder="Digite aqui como foi, séries, tiros, observações..."></textarea>
+    <div class="two">
+      <div><label for="sSport">MODALIDADE</label><select id="sSport"></select></div>
+      <div><label for="sDist">DISTÂNCIA (KM)</label><input id="sDist" type="text" inputmode="decimal" placeholder="0,00"></div>
+    </div>
+    <div class="two">
+      <div><label for="sType">TIPO DE TREINO</label><select id="sType"><option value="">—</option><option>Leve</option><option>Longo</option><option>Intervalado</option><option>Ritmo / Tempo</option><option>Regenerativo</option><option>Prova / Competição</option><option>Técnica</option><option>Força</option></select></div>
+      <div><label for="sPlace">LOCAL</label><input id="sPlace" type="text" maxlength="60" placeholder="Parque, rua, academia..."></div>
+    </div>
+    <label>SENSAÇÃO</label>
+    <div class="feels" id="feels"><button type="button" class="feel" data-f="😫">😫</button><button type="button" class="feel" data-f="😕">😕</button><button type="button" class="feel" data-f="🙂">🙂</button><button type="button" class="feel" data-f="😀">😀</button><button type="button" class="feel" data-f="🔥">🔥</button></div>
+    <label for="sRpe">ESFORÇO PERCEBIDO: <b id="rpeV" class="o">5</b>/10</label><input id="sRpe" type="range" min="1" max="10" value="5">
+    <label>FOTOS (ATÉ 4)</label><div class="photos" id="photoGrid"></div><input id="photoIn" type="file" accept="image/*" multiple hidden>
+    <button class="grad" style="margin-top:24px" onclick="saveAct()" id="sBtn">Salvar treino</button>
+    <button class="ghost" onclick="discardAct()">Descartar</button>
+  </section>
+
+  <div class="ov" id="o-sport" onclick="if(event.target===this)closeSheet('sport')"><div class="sheet" style="height:85%">
+    <button class="x" onclick="closeSheet('sport')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Escolha a modalidade</h3><div class="sub" id="sportCount"></div>
+    <div class="search" id="sportSearch"><i class="fa-solid fa-magnifying-glass" style="color:var(--m)"></i><input id="sq" placeholder="Buscar modalidade..." autocomplete="off"></div>
+    <div class="tiles" id="tiles" style="margin-top:8px"></div>
+  </div></div>
+
+  <div class="ov" id="o-special" onclick="if(event.target===this)closeSheet('special')"><div class="sheet">
+    <button class="x" onclick="closeSheet('special')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3><i class="fa-solid fa-bolt o"></i> Modo especial</h3><p class="sub">Ferramentas extras para a sua atividade.</p>
+    <div class="opt"><div><b>Pausa automática</b><span class="sub">Pausa quando você para e retoma ao voltar a se mover.</span></div><input type="checkbox" id="spAuto" onchange="setPref('auto_pause',this.checked)"></div>
+    <div class="opt"><div><b>Alerta de ritmo-alvo</b><span class="sub">A voz avisa se você sair do ritmo.</span></div>
+      <select id="spTarget" onchange="setPref('target_pace',+this.value)"><option value="0">Desligado</option><option value="240">4:00</option><option value="270">4:30</option><option value="300">5:00</option><option value="330">5:30</option><option value="360">6:00</option><option value="390">6:30</option><option value="420">7:00</option><option value="480">8:00</option></select></div>
+    <button class="ghost" onclick="addLap()"><i class="fa-solid fa-flag-checkered o"></i> Marcar volta agora</button>
+    <button class="ghost" onclick="shareLoc()"><i class="fa-solid fa-location-crosshairs o"></i> Compartilhar minha localização (SOS)</button>
+    <button class="ghost" id="guideBtn" onclick="clearGuide()" style="display:none"><i class="fa-solid fa-xmark"></i> Remover rota guia</button>
+  </div></div>
+
+  <div class="ov" id="o-act" onclick="if(event.target===this)closeSheet('act')"><div class="sheet">
+    <button class="x" onclick="closeSheet('act')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div class="lbl" id="aDate"></div><h3 id="aTitle" style="margin-top:4px"></h3>
+    <div id="dmap"></div><div class="kpis" id="aStats"></div><div id="aSplits"></div>
+    <div id="aExtra" class="sub" style="margin-top:14px"></div><div id="aLaps" class="sub" style="margin-top:8px"></div>
+    <div class="photos" id="aPhotos" style="margin-top:12px"></div><p class="sub" id="aNote" style="margin:14px 0"></p>
+    <button class="ghost" id="aGpx"><i class="fa-solid fa-download"></i> Exportar GPX</button>
+    <button class="ghost" id="aDel" style="color:var(--red);border-color:#ef444466">Excluir atividade</button>
+  </div></div>
+
+  <div class="ov" id="o-edit" onclick="if(event.target===this)closeSheet('edit')"><div class="sheet">
+    <button class="x" onclick="closeSheet('edit')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Editar perfil</h3>
+    <div class="avbig" id="eAv" onclick="document.getElementById('avIn').click()"></div>
+    <div class="center"><button class="link" onclick="document.getElementById('avIn').click()"><i class="fa-solid fa-camera"></i> Trocar foto</button>
+      <button class="link" style="margin-left:14px;color:var(--m)" onclick="rmAvatar()">Remover</button></div>
+    <input id="avIn" type="file" accept="image/*" hidden>
+    <label for="eName">NOME</label><input id="eName" type="text" maxlength="40">
+    <label for="eBio">BIO</label><textarea id="eBio" rows="3" maxlength="160" placeholder="Conte um pouco sobre você, suas metas, sua história..."></textarea>
+    <button class="grad" style="margin-top:18px" onclick="saveEdit()">Salvar perfil</button>
+  </div></div>
+
+  <div class="ov" id="o-gc" onclick="if(event.target===this)closeSheet('gc')"><div class="sheet">
+    <button class="x" onclick="closeSheet('gc')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Criar grupo</h3><p class="sub">Reúna atletas e acompanhe o progresso juntos.</p>
+    <label for="gName">Nome</label><input id="gName" type="text" maxlength="50" placeholder="Ex.: Corredores da madrugada">
+    <label for="gDesc">Descrição</label><textarea id="gDesc" rows="3" maxlength="150"></textarea>
+    <button class="grad" style="margin-top:18px" onclick="createGroup()">Criar grupo</button>
+  </div></div>
+
+  <div class="ov" id="o-gs" onclick="if(event.target===this)closeSheet('gs')"><div class="sheet">
+    <button class="x" onclick="closeSheet('gs')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="gsName"></h3><div class="lbl" id="gsCount" style="margin:6px 0 12px"></div>
+    <p class="sub" id="gsDesc" style="margin-bottom:18px"></p><button class="grad" id="gsBtn" onclick="toggleGroup()">Entrar no grupo</button>
+  </div></div>
+
+  <div class="ov" id="o-settings" onclick="if(event.target===this)closeSheet('settings')"><div class="sheet">
+    <button class="x" onclick="closeSheet('settings')" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Configurações</h3>
+    <div class="opt"><div><b>Meta semanal</b></div><select id="sGoal" onchange="setPref('weekly_goal_km',+this.value)"><option value="10">10 km</option><option value="20">20 km</option><option value="30">30 km</option><option value="50">50 km</option><option value="80">80 km</option></select></div>
+    <div class="opt"><div><b>Assistente de voz</b><span class="sub">Fala tempo, distância e ritmo durante o treino.</span></div><input type="checkbox" id="vTog" onchange="setPref('voice_enabled',this.checked)"></div>
+    <div class="opt"><div><b>Falar a cada</b></div><select id="vEvery" onchange="setPref('voice_every',+this.value)"><option value="0.5">0,5 km</option><option value="1">1 km</option><option value="2">2 km</option><option value="5">5 km</option></select></div>
+    <button class="ghost" onclick="testVoice()"><i class="fa-solid fa-volume-high o"></i> Testar voz</button>
+    <button class="ghost" onclick="downloadMap()"><i class="fa-solid fa-map o"></i> Baixar mapa desta região (offline)</button>
+    <button class="ghost" onclick="syncNow()"><i class="fa-solid fa-rotate o"></i> Sincronizar agora <span id="syncN" class="sub"></span></button>
+    <button class="ghost" id="instBtn" style="display:none" onclick="installApp()"><i class="fa-solid fa-mobile-screen o"></i> Instalar aplicativo</button>
+    <button class="ghost" style="color:var(--red);border-color:#ef444466" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Sair da conta</button>
+  </div></div>
+  <div class="toast" id="toast" role="status"></div>
+</section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+"use strict";
+const SB_URL="https://cownghrbgrqutvgdeofk.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvd25naHJiZ3JxdXR2Z2Rlb2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MTEwNzgsImV4cCI6MjEwNzE4NzA3OH0.g3kG5kQvOUwkvQyvR_xeIZdwuG7m6-up1-LvGa2l1Es";
+const TILE="https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+const SAT="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const $=id=>document.getElementById(id);const now=()=>Date.now();
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}},del(k){try{localStorage.removeItem(k)}catch{}}};
+const cachedUser=()=>LS.get("runisca_user",null);
+
+let sb;
+try{
+  if(!window.supabase)throw 0;
+  sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+}catch{
+  const ch=()=>{const p=new Proxy(function(){},{get:(t,k)=>k==="then"?r=>r({data:null,error:{message:"offline"}}):()=>p,apply:()=>p});return p};
+  const off=async()=>({error:{message:"Sem internet."}});
+  sb={from:ch,auth:{onAuthStateChange(cb){setTimeout(()=>{const u=cachedUser();cb(u?"SIGNED_IN":"SIGNED_OUT",u?{user:u}:null)},50);return{data:{subscription:{unsubscribe(){}}}}},
+    signOut:async()=>({error:null}),signInWithPassword:off,signUp:off,signInWithOAuth:off,resetPasswordForEmail:off,updateUser:off,getSession:async()=>({data:{session:null}})}};
+}
+const Q=p=>Promise.resolve(p).then(x=>x,e=>({error:{message:String(e&&e.message||e)}}));
+const missingTbl=e=>!!e&&/schema cache|does not exist|could not find the table|relation .* does not exist/i.test(e.message||"");
+const missingCol=e=>!!e&&/column|schema cache/i.test(e.message||"")&&!missingTbl(e);
+const MISSING=new Set();
+
+const SPORTS=[];
+const S=(cat,ic,gps,names)=>names.split(",").forEach(n=>SPORTS.push([n.trim(),ic,cat,gps]));
+S("Corrida","fa-person-running",1,"Corrida,Corrida de rua,Corrida de trilha,Corrida na pista,Maratona,Meia maratona,Ultramaratona,Treino intervalado,Cross country");
+S("Corrida","fa-person-running",0,"Corrida na esteira");
+S("Caminhada","fa-person-walking",1,"Caminhada,Caminhada nórdica,Marcha atlética,Rucking");
+S("Caminhada","fa-person-walking",0,"Caminhada na esteira");
+S("Caminhada","fa-person-hiking",1,"Trilha,Montanhismo");
+S("Ciclismo","fa-person-biking",1,"Ciclismo de estrada,Mountain bike,Gravel,Bike urbana,Bike elétrica,BMX");
+S("Ciclismo","fa-bicycle",0,"Spinning");
+S("Multiesporte","fa-medal",1,"Triatlo,Duatlo,Aquatlo,Ironman 70.3,Ironman,Corrida de aventura,Corrida de obstáculos");
+S("Água","fa-person-swimming",1,"Natação em águas abertas");
+S("Água","fa-person-swimming",0,"Natação,Hidroginástica,Polo aquático");
+S("Água","fa-water",1,"Remo,Caiaque,Stand up paddle,Surfe,Vela");
+S("Academia","fa-dumbbell",0,"Musculação,Crossfit,Funcional,HIIT,Calistenia,Elíptico,Escada ergométrica");
+S("Academia","fa-spa",0,"Pilates,Yoga,Alongamento");
+S("Academia","fa-music",0,"Dança,Zumba");
+S("Lutas","fa-hand-fist",0,"Boxe,Muay Thai,Jiu-Jitsu,Judô,Karatê,MMA");
+S("Esportes","fa-futbol",1,"Futebol,Futsal");
+S("Esportes","fa-basketball",0,"Basquete");
+S("Esportes","fa-volleyball",0,"Vôlei,Vôlei de praia");
+S("Esportes","fa-football",0,"Rugby,Handebol");
+S("Esportes","fa-table-tennis-paddle-ball",0,"Tênis,Beach tennis,Padel,Squash,Tênis de mesa");
+S("Esportes","fa-golf-ball-tee",1,"Golfe");
+S("Esportes","fa-person-skating",1,"Skate,Patins");
+S("Esportes","fa-mountain",1,"Escalada");
+S("Esportes","fa-person-skiing",1,"Esqui,Snowboard");
+S("Esportes","fa-horse",1,"Equitação");
+S("Esportes","fa-child-reaching",0,"Ginástica");
+S("Esportes","fa-stopwatch",1,"Atletismo");
+S("Outros","fa-star",1,"Outro");
+const spInfo=n=>SPORTS.find(x=>x[0]===n)||SPORTS[SPORTS.length-1];
+const iconOf=n=>spInfo(n)[1];const useGps=n=>!!spInfo(n)[3];
+
+const DEF={name:"Atleta",bio:"",avatar:"",weekly_goal_km:20,voice_enabled:true,voice_every:1,auto_pause:true,target_pace:0};
+let U=null,P={...DEF},A=[],GROUPS=[],GMEM=[],RN=LS.get("runisca_rn",{});
+let FILTER="Todas",QR="",sport="Corrida",tab="inicio",gMode="mine",ACHF="Todas";
+let ready=false,splashDone=false,recovering=false,entering=false,appOn=false,dMap=null,curGroup=null,loggingOut=false,syncing=false,tmpAvatar="",GUIDE=null,deferredInstall=null;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
+const pad=n=>String(n).padStart(2,"0");
+const fk=(v,d=1)=>(+v||0).toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const ft=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?h+":"+pad(m)+":"+pad(s%60):pad(m)+":"+pad(s%60)};
+const fp=(s,km)=>{if(!km||km<0.05||!s)return "—";const p=Math.round(s/km);return Math.floor(p/60)+"'"+pad(p%60)+'"'};
+const hav=(a,b)=>{const r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 12742*Math.asin(Math.sqrt(h))};
+const brg=(p,q)=>{const r=v=>v*Math.PI/180,dn=r(q[1]-p[1]);const y=Math.sin(dn)*Math.cos(r(q[0])),x=Math.cos(r(p[0]))*Math.sin(r(q[1]))-Math.sin(r(p[0]))*Math.cos(r(q[0]))*Math.cos(dn);return(Math.atan2(y,x)*180/Math.PI+360)%360};
+const initials=n=>(n||"A").trim().charAt(0).toUpperCase();
+const kcal=km=>Math.round(km*62);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),3200)}
+const ERR={"Invalid login credentials":"E-mail ou senha incorretos.","User already registered":"Este e-mail já está cadastrado.","Email not confirmed":"Confirme seu e-mail antes de entrar.","Password should be at least 6 characters.":"A senha precisa ter ao menos 6 caracteres."};
+const msg=e=>ERR[e?.message]||e?.message||"Algo deu errado. Tente novamente.";
+function paintAvatar(el){if(P.avatar){el.style.backgroundImage='url("'+P.avatar+'")';el.textContent=""}else{el.style.backgroundImage="";el.textContent=initials(P.name)}}
+
+let VOICE=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();VOICE=vs.find(v=>/pt[-_]BR/i.test(v.lang))||vs.find(v=>/^pt/i.test(v.lang))||null}catch{}}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function speak(t,urgent){
+  const el=$("lvSay");if(el)el.textContent="🔊 "+t;
+  if(!P.voice_enabled||!("speechSynthesis" in window))return;
+  try{if(urgent)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";if(VOICE)u.voice=VOICE;u.rate=1;speechSynthesis.speak(u)}catch{}
+}
+const sd=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,a=[];if(h)a.push(h+(h>1?" horas":" hora"));if(m)a.push(m+(m>1?" minutos":" minuto"));if(x||!a.length)a.push(x+(x===1?" segundo":" segundos"));return a.join(" e ")};
+const kmTxt=k=>k===1?"1 quilômetro":fk(k,k%1?1:0)+" quilômetros";
+function testVoice(){speak("Olá "+(P.name||"atleta").split(" ")[0]+"! Aqui é a sua assistente RUNISCA. Quilômetro 1. Tempo 5 minutos e 20 segundos. Bom ritmo!",true)}
+
+function resample(pts,n){
+  if(pts.length<2)return pts;const d=[0];for(let i=1;i<pts.length;i++)d.push(d[i-1]+hav(pts[i-1],pts[i]));
+  const T=d[d.length-1];if(!T)return pts;const out=[];let j=0;
+  for(let k=0;k<n;k++){const t=T*k/(n-1);while(j<d.length-2&&d[j+1]<t)j++;const s=(t-d[j])/((d[j+1]-d[j])||1);out.push([pts[j][0]+(pts[j+1][0]-pts[j][0])*s,pts[j][1]+(pts[j+1][1]-pts[j][1])*s])}
+  return out;
+}
+function simKm(a,b){const x=resample(a.pts,40),y=resample(b.pts,40);let s=0,s2=0;for(let i=0;i<40;i++){s+=hav(x[i],y[i]);s2+=hav(x[i],y[39-i])}return Math.min(s,s2)/40}
+const TYPEMEMO=new Map();
+function classify(a){
+  const k=a.id+":"+a.pts.length;if(TYPEMEMO.has(k))return TYPEMEMO.get(k);
+  const pts=a.pts;let r="Ponto a ponto";
+  if(pts.length>1){
+    const gap=hav(pts[0],pts[pts.length-1]);
+    if(gap<Math.max(.15,a.dist*.1))r="Circuito";
+    else{const h=Math.ceil(pts.length/2),first=pts.slice(0,h),sec=pts.slice(h);let n=0;sec.forEach(p=>{if(first.some(q=>hav(p,q)<.04))n++});if(n/sec.length>.6)r="Ida e volta"}
+  }
+  TYPEMEMO.set(k,r);return r;
+}
+function buildClusters(){
+  const list=A.filter(a=>a.pts.length>1&&a.dist>=.3).sort((x,y)=>y.date-x.date),cl=[];
+  list.forEach(a=>{const f=cl.find(c=>Math.abs(c.rep.dist-a.dist)/Math.max(c.rep.dist,a.dist)<.18&&simKm(c.rep,a)<.07);if(f)f.items.push(a);else cl.push({rep:a,items:[a]})});
+  cl.forEach(c=>{c.best=Math.min(...c.items.map(i=>i.sec));c.type=classify(c.rep)});
+  return cl;
+}
+function rLabel(a){return (RN[a.id]||"Rota "+classify(a).toLowerCase())+" · "+fk(a.dist,1)+" km"}
+let nameBusy=false;
+async function autoName(list){
+  if(nameBusy||!navigator.onLine)return;nameBusy=true;let ch=false;
+  for(const a of list){
+    if(RN[a.id])continue;const p=a.pts[Math.floor(a.pts.length/2)];
+    try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&accept-language=pt-BR&lat="+p[0]+"&lon="+p[1]);const j=await r.json(),ad=j.address||{};
+      const place=ad.park||ad.leisure||ad.road||ad.neighbourhood||ad.suburb||ad.city_district||ad.city||j.name;if(place){RN[a.id]=place;ch=true}}catch{}
+    await new Promise(r=>setTimeout(r,1100));
+  }
+  LS.set("runisca_rn",RN);nameBusy=false;if(ch&&tab==="rotas")renderRoutes();
+}
+function simplify(pts,eps){
+  if(pts.length<3)return pts;const keep=new Uint8Array(pts.length);keep[0]=keep[pts.length-1]=1;const st=[[0,pts.length-1]];
+  while(st.length){const [a,b]=st.pop();let mx=0,ix=-1;const A1=pts[a],B1=pts[b];
+    for(let i=a+1;i<b;i++){const p=pts[i];const dx=B1[1]-A1[1],dy=B1[0]-A1[0],den=dx*dx+dy*dy||1e-12;let t=((p[1]-A1[1])*dx+(p[0]-A1[0])*dy)/den;t=Math.max(0,Math.min(1,t));
+      const d=Math.hypot(p[1]-(A1[1]+t*dx),p[0]-(A1[0]+t*dy));if(d>mx){mx=d;ix=i}}
+    if(mx>eps&&ix>0){keep[ix]=1;st.push([a,ix],[ix,b])}}
+  return pts.filter((_,i)=>keep[i]);
+}
+function cleanRoute(pts){
+  if(pts.length<3)return pts;
+  const sm=pts.map((p,i)=>{if(i===0||i===pts.length-1)return p;const a=pts[i-1],b=pts[i+1];return[(a[0]+p[0]*2+b[0])/4,(a[1]+p[1]*2+b[1])/4]});
+  let r=simplify(sm,.000012);
+  if(r.length>400){const k=Math.ceil(r.length/400);r=r.filter((_,i)=>i%k===0||i===r.length-1)}
+  return r.map(p=>[+p[0].toFixed(6),+p[1].toFixed(6)]);
+}
+function thumb(pts,w=118,h=92,stroke="#ff8a4c"){
+  if(!pts||pts.length<2)return '<i class="fa-solid fa-route" style="color:#3a3a44;font-size:1.6rem"></i>';
+  const la=pts.map(p=>p[0]),lo=pts.map(p=>p[1]);
+  const a=Math.min(...la),b=Math.max(...la),o=Math.min(...lo),q=Math.max(...lo),pd=16;
+  const s=Math.min((w-2*pd)/Math.max(q-o,1e-6),(h-2*pd)/Math.max(b-a,1e-6));
+  const ox=pd+((w-2*pd)-(q-o)*s)/2,oy=pd+((h-2*pd)-(b-a)*s)/2;
+  const X=p=>(ox+(p[1]-o)*s).toFixed(1),Y=p=>(oy+(b-p[0])*s).toFixed(1);
+  const str=pts.filter((_,i)=>i%Math.ceil(pts.length/150)===0).map(p=>X(p)+","+Y(p)).join(" ");const last=pts[pts.length-1];
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet"><polyline points="${str}" fill="none" stroke="#ff5a1f55" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${str}" fill="none" stroke="${stroke}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(pts[0])}" cy="${Y(pts[0])}" r="4.5" fill="#36d399"/><circle cx="${X(last)}" cy="${Y(last)}" r="4.5" fill="#ef4444"/></svg>`;
+}
+
+function show(id){document.querySelectorAll("#app-root>.scr").forEach(s=>s.classList.toggle("on",s.id===id))}
+function splashSkip(){if($("splash").classList.contains("on")){splashDone=true;decide()}}
+function decide(){
+  if(!splashDone||!ready)return;
+  if(recovering){show("reset");return}
+  if(U){if(!appOn&&!entering)enterApp();return}
+  appOn=false;show("login");
+}
+setTimeout(()=>{splashDone=true;decide()},3200);
+setTimeout(()=>{if(!ready){U=cachedUser();ready=true;decide()}},6000);
+sb.auth.onAuthStateChange((ev,s)=>{
+  if(ev==="PASSWORD_RECOVERY"){recovering=true;ready=true;decide();return}
+  if(recovering)return;
+  let nu=s?.user||null;
+  if(!nu&&!navigator.onLine&&!loggingOut)nu=cachedUser();
+  if(!nu){U=null;A=[];appOn=false;LS.del("runisca_user")}
+  else{U=nu;LS.set("runisca_user",{id:nu.id,email:nu.email,user_metadata:nu.user_metadata})}
+  ready=true;decide();
+});
+async function enterApp(){
+  entering=true;
+  try{await loadAll()}catch(e){console.warn(e)}
+  entering=false;appOn=true;show("app");go(tab);
+  checkAch(true);syncQueue();checkRecover();
+}
+function eye(id,btn){const i=$(id);i.type=i.type==="password"?"text":"password";btn.querySelector("i").className=i.type==="password"?"fa-regular fa-eye":"fa-regular fa-eye-slash"}
+async function oauth(p){const {error}=await sb.auth.signInWithOAuth({provider:p,options:{redirectTo:location.origin+location.pathname}});if(error)toast(msg(error))}
+async function logout(){
+  if(REC.on&&!confirm("Há um treino em andamento. Sair mesmo assim?"))return;
+  loggingOut=true;recStopTimers();REC.on=false;LS.del("runisca_rec");lmStop();closeSheet("settings");
+  ["livescr","savescr","recscr"].forEach(i=>$(i).classList.remove("on"));
+  LS.del("runisca_user");await Q(sb.auth.signOut());U=null;A=[];appOn=false;loggingOut=false;
+  toast("Sessão encerrada");decide();
+}
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();const b=$("lBtn");b.disabled=true;$("lNote").textContent="";
+  const {error}=await sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value});
+  b.disabled=false;if(error)$("lNote").textContent=msg(error);
+});
+$("regForm").addEventListener("submit",async e=>{
+  e.preventDefault();const b=$("rBtn"),n=$("rNote");n.textContent="";
+  if($("rPass").value!==$("rPass2").value){n.textContent="As senhas não coincidem.";return}
+  b.disabled=true;
+  const {data,error}=await sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{name:$("rName").value.trim(),phone:$("rPhone").value.trim()},emailRedirectTo:location.origin+location.pathname}});
+  b.disabled=false;
+  if(error){n.textContent=msg(error);return}
+  if(!data.session){n.textContent="Enviamos um link de confirmação para o seu e-mail.";show("login")}
+});
+$("fgForm").addEventListener("submit",async e=>{
+  e.preventDefault();const b=$("fBtn");b.disabled=true;
+  const {error}=await sb.auth.resetPasswordForEmail($("fEmail").value.trim(),{redirectTo:location.origin+location.pathname});
+  b.disabled=false;$("fNote").textContent=error?msg(error):"Se o e-mail existir, enviamos o link de redefinição.";
+});
+$("rsForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if($("nPass").value!==$("nPass2").value){$("rsNote").textContent="As senhas não coincidem.";return}
+  const {error}=await sb.auth.updateUser({password:$("nPass").value});
+  if(error){$("rsNote").textContent=msg(error);return}
+  recovering=false;history.replaceState(null,"",location.pathname);
+  const {data}=await sb.auth.getSession();U=data.session?.user||null;ready=true;decide();toast("Senha atualizada!");
+});
+
+const getPhotos=id=>LS.get("runisca_ph_"+id,[]);
+const fromRow=r=>({id:r.id,sport:r.sport,title:r.title,note:r.note,dist:+r.distance_km||0,sec:+r.duration_sec||0,sp:r.splits_sec||[],pts:Array.isArray(r.route)?r.route:[],date:new Date(r.started_at).getTime(),x:{...LS.get("runisca_x_"+r.id,{}),...(r.extra||{})},pending:!!r.pending});
+const queue=()=>LS.get("runisca_q",[]);
+function rebuildA(rows){A=[...queue().map(q=>fromRow({...q,pending:true})),...(rows||[]).map(fromRow)].sort((a,b)=>b.date-a.date)}
+async function loadAll(){
+  const uid=U.id;P={...DEF,...LS.get("runisca_p_"+uid,{})};
+  if(!P.name||P.name==="Atleta")P.name=P.name!=="Atleta"&&P.name?P.name:(U.user_metadata?.name||"Atleta");
+  const c=LS.get("runisca_cache",null),mine=c&&c.uid===uid?c:null;
+  let rows=mine?.act||[];GROUPS=mine?.groups||[];GMEM=mine?.gmem||[];
+  if(navigator.onLine){
+    const [pr,ac,gr,gm]=await Promise.all([
+      Q(sb.from("profiles").select("*").eq("id",uid).maybeSingle()),
+      Q(sb.from("activities").select("*").eq("user_id",uid).order("started_at",{ascending:false})),
+      Q(sb.from("groups").select("*").order("created_at",{ascending:false})),
+      Q(sb.from("group_members").select("*"))]);
+    MISSING.clear();
+    [["profiles",pr],["activities",ac],["groups",gr],["group_members",gm]].forEach(([n,r])=>{if(r.error&&missingTbl(r.error))MISSING.add(n)});
+    if(pr.data){const d=pr.data;P={...P,name:d.name||P.name,bio:d.bio??P.bio,avatar:d.avatar||P.avatar,weekly_goal_km:+d.weekly_goal_km||P.weekly_goal_km,voice_enabled:d.voice_enabled!==false,voice_every:+d.voice_every_km||P.voice_every}}
+    else if(!pr.error&&!MISSING.has("profiles"))pushProfile();
+    if(!ac.error&&ac.data)rows=ac.data;if(!gr.error&&gr.data)GROUPS=gr.data;if(!gm.error&&gm.data)GMEM=gm.data;
+    LS.set("runisca_cache",{uid,act:rows,groups:GROUPS,gmem:GMEM});
+  }
+  LS.set("runisca_p_"+uid,P);rebuildA(rows);
+}
+async function pushProfile(){
+  if(!U||!navigator.onLine||MISSING.has("profiles"))return;
+  const full={id:U.id,name:P.name,bio:P.bio,avatar:P.avatar,weekly_goal_km:P.weekly_goal_km,voice_enabled:P.voice_enabled,voice_every_km:P.voice_every};
+  let r=await Q(sb.from("profiles").upsert(full));
+  if(r.error&&missingCol(r.error)){const {bio,avatar,voice_every_km,...min}=full;r=await Q(sb.from("profiles").upsert(min))}
+  if(r.error&&missingTbl(r.error)){MISSING.add("profiles")}
+}
+function setPref(k,v){P[k]=v;LS.set("runisca_p_"+U.id,P);pushProfile();renderAll()}
+async function insertRow(row){
+  let r=await Q(sb.from("activities").insert(row).select().single());
+  if(r.error&&missingCol(r.error)){const {extra,...rest}=row;r=await Q(sb.from("activities").insert(rest).select().single())}
+  if(r.error&&missingTbl(r.error))MISSING.add("activities");
+  return r;
+}
+async function syncQueue(){
+  if(!U||!navigator.onLine||syncing)return;const q=queue();if(!q.length)return;
+  syncing=true;const rest=[];let ok=0;
+  for(const row of q){
+    const {id,...r}=row;const res=await insertRow(r);
+    if(res.error){rest.push(row);continue}ok++;
+    const ph=LS.get("runisca_ph_"+id,null);if(ph){LS.set("runisca_ph_"+res.data.id,ph);LS.del("runisca_ph_"+id)}
+    const x=LS.get("runisca_x_"+id,null);if(x){LS.set("runisca_x_"+res.data.id,x);LS.del("runisca_x_"+id)}
+  }
+  LS.set("runisca_q",rest);syncing=false;
+  if(ok){toast("☁️ "+ok+" atividade"+(ok>1?"s":"")+" sincronizada"+(ok>1?"s":""));await loadAll();renderAll()}else updateNet();
+}
+function syncNow(){if(!navigator.onLine)return toast("Sem internet no momento.");toast("Sincronizando...");syncQueue().then(()=>loadAll().then(()=>{renderAll();toast("Tudo atualizado")}))}
+function updateNet(){
+  const off=!navigator.onLine,n=queue().length;
+  $("tgOff").style.display=off?"inline-block":"none";
+  const tp=$("tgPend");tp.style.display=n?"inline-block":"none";tp.textContent="☁ "+n+" p/ enviar";
+  $("syncN").textContent=n?"("+n+" pendente"+(n>1?"s":"")+")":"";
+}
+addEventListener("online",()=>{updateNet();syncQueue();pushProfile();toast("Conexão restabelecida")});
+addEventListener("offline",()=>{updateNet();toast("Você está offline. O app continua funcionando.")});
+
+function go(t){
+  tab=t;
+  document.querySelectorAll(".tab").forEach(s=>s.classList.toggle("on",s.id==="t-"+t));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  document.querySelector("nav .rec").classList.toggle("on",t==="gravar");
+  renderAll();
+  $("recscr").classList.toggle("on",t==="gravar");
+  if(t==="gravar")lmInit();else lmStop();
+  $("app").querySelector("main").scrollTop=0;updateMini();
+}
+function renderAll(){if(!U)return;renderHome();renderRoutes();renderTiles();renderGroups();renderProfile();paintPanel();updateNet();syncSettings()}
+function openSheet(n){$("o-"+n).classList.add("on");if(n==="sport"){$("sq").value="";renderTiles()}if(n==="special")syncSettings()}
+function closeSheet(n){$("o-"+n).classList.remove("on");if(n==="act"&&dMap){dMap.remove();dMap=null}}
+function openSettings(){syncSettings();openSheet("settings")}
+function syncSettings(){
+  $("sGoal").value=P.weekly_goal_km;$("vTog").checked=P.voice_enabled;$("vEvery").value=String(P.voice_every);
+  $("spAuto").checked=P.auto_pause;$("spTarget").value=String(P.target_pace||0);$("guideBtn").style.display=GUIDE?"flex":"none";
+}
+
+function week(off){const end=now()-off*7*864e5,start=end-7*864e5;return A.filter(a=>a.date>start&&a.date<=end)}
+function delta(c,p){if(!p)return c?'<span class="up">▲ novo</span>':'<span class="sub">—</span>';const d=Math.round((c-p)/p*100);return d>=0?`<span class="up">▲ ${d}%</span>`:`<span class="down">▼ ${Math.abs(d)}%</span>`}
+function renderHome(){
+  $("hello").textContent="Olá, "+(P.name||"atleta").split(" ")[0]+"!";paintAvatar($("hAv"));
+  $("dbWarn").innerHTML="";
+  const last=A[0];
+  $("lastCard").innerHTML=last
+  ?`<div class="row" style="margin-bottom:12px"><span class="pill"><i class="fa-solid ${iconOf(last.sport)}"></i> ${esc(last.sport)}</span><span class="lbl">ÚLTIMA · ${new Date(last.date).toLocaleDateString("pt-BR")}</span></div>
+    <div class="row" style="align-items:stretch"><div style="flex:1;min-width:0">
+      <div class="big" style="font-size:2.4rem;font-style:italic">${fk(last.dist,2)}<small>km</small></div>
+      <div class="sub" style="margin-top:10px;line-height:1.9"><b style="color:var(--t)">${ft(last.sec)}</b> tempo<br><b style="color:var(--t)">${fp(last.sec,last.dist)}</b> /km<br><b style="color:var(--t)">${kcal(last.dist)} kcal</b> estimado</div></div>
+      <div style="width:138px;height:118px;border-radius:14px;background:#101312;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden">${thumb(last.pts,138,118)}</div></div>
+    <button class="link" style="margin-top:12px" onclick="openAct('${last.id}')">Ver detalhes →</button>`
+  :`<div class="empty" style="margin:0;border:0"><i class="fa-solid fa-person-running"></i>Nenhuma atividade ainda.<br><button class="grad" style="margin-top:14px;width:auto;padding:12px 22px;display:inline-block" onclick="go('gravar')">Começar a gravar</button></div>`;
+  const cur=week(0),prev=week(1);
+  const cK=cur.reduce((s,a)=>s+a.dist,0),pK=prev.reduce((s,a)=>s+a.dist,0),cT=cur.reduce((s,a)=>s+a.sec,0),pT=prev.reduce((s,a)=>s+a.sec,0),cC=kcal(cK),pC=kcal(pK);
+  $("weekKpis").innerHTML=`<div class="kpi"><div class="lbl">DISTÂNCIA</div><div class="big">${fk(cK)}<small>km</small></div><div class="d">${delta(cK,pK)}</div></div>
+   <div class="kpi"><div class="lbl">TEMPO</div><div class="big">${Math.round(cT/60)}<small>min</small></div><div class="d">${delta(cT,pT)}</div></div>
+   <div class="kpi"><div class="lbl">CALORIAS</div><div class="big">${cC}<small>kcal</small></div><div class="d">${delta(cC,pC)}</div></div>`;
+  const day=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x.getTime()};
+  const days=[...Array(7)].map((_,i)=>{const s=day(now()-(6-i)*864e5),e=s+864e5;return{l:new Date(s).toLocaleDateString("pt-BR",{weekday:"short"}).replace(".","").charAt(0).toUpperCase(),km:A.filter(a=>a.date>=s&&a.date<e).reduce((t,a)=>t+a.dist,0)}});
+  const mx=Math.max(1,...days.map(d=>d.km));
+  $("wkChart").innerHTML=days.map(d=>`<div><b style="height:${Math.max(3,d.km/mx*100)}%;opacity:${d.km?1:.25}"></b>${esc(d.l)}</div>`).join("");
+  const goal=P.weekly_goal_km||20,pct=Math.min(100,Math.round(cK/goal*100));
+  $("goalTxt").textContent=goal+" km";$("goalPct").textContent=pct+"%";$("gRing").style.setProperty("--p",pct);$("goalSub").textContent=fk(cK)+" de "+goal+" km nesta semana";
+  const ds=new Set(A.map(a=>new Date(a.date).toDateString()));let st=0,d=new Date();if(!ds.has(d.toDateString()))d.setDate(d.getDate()-1);
+  while(ds.has(d.toDateString())){st++;d.setDate(d.getDate()-1)}
+  $("streak").innerHTML='<i class="fa-solid fa-fire" style="color:var(--o)"></i> '+st+" dia"+(st===1?"":"s")+" seguidos";
+  $("recent").innerHTML=A.length?A.slice(0,5).map(a=>`<div class="hist" onclick="openAct('${a.id}')"><div class="hi"><i class="fa-solid ${iconOf(a.sport)}"></i></div><div class="hm"><h4>${esc(a.title||a.sport)}${a.pending?' <span class="sub">☁ pendente</span>':""}</h4><div class="sub">${new Date(a.date).toLocaleDateString("pt-BR")} · ${ft(a.sec)} · ${fp(a.sec,a.dist)}/km</div></div><b>${fk(a.dist,2)} km</b></div>`).join(""):'<div class="sub" style="padding:10px 0">Suas atividades aparecem aqui.</div>';
+}
+
+function renderLiveCard(){
+  $("liveRoute").innerHTML=REC.on?`<div class="card livecard"><div class="th">${thumb(REC.pts,96,80)}</div><div><div class="lbl" style="color:#ff8d8d"><span class="rec-dot"></span>MAPEANDO AGORA</div><div class="big" style="font-size:1.3rem;margin:4px 0">${useGps(REC.sport)?fk(REC.dist,2)+" km":ft(elapsed())}</div><div class="sub">A IA está traçando e limpando o seu percurso.</div></div></div>`:"";
+}
+function renderRoutes(){
+  renderLiveCard();
+  const cl=buildClusters(),freq=cl.filter(c=>c.items.length>1);
+  const goal=P.weekly_goal_km||20,target=Math.max(3,goal/3);
+  const sug=cl.length?[...cl].sort((a,b)=>Math.abs(a.rep.dist-target)-Math.abs(b.rep.dist-target))[0]:null;
+  $("aiCard").innerHTML=`<div class="lbl"><i class="fa-solid fa-wand-magic-sparkles"></i> IA DE ROTAS</div>`+(cl.length
+   ?`<h3>${cl.length} rota${cl.length>1?"s":""} mapeada${cl.length>1?"s":""} · ${freq.length} frequente${freq.length===1?"":"s"}</h3><div class="sub">Agrupo percursos parecidos, classifico o formato e nomeio pelo local.</div>
+     ${sug?`<div class="row" style="margin-top:12px"><div style="min-width:0"><div class="lbl">SUGESTÃO PARA HOJE</div><b style="font-size:.88rem">${esc(rLabel(sug.rep))}</b></div><button class="btn-s" onclick="followRoute('${sug.rep.id}')">Seguir</button></div>`:""}`
+   :`<h3>Pronta para mapear</h3><div class="sub">Inicie qualquer atividade com GPS: o percurso é traçado automaticamente, limpo e salvo aqui.</div>`);
+  const chips=["Todas","Frequentes","Circuito","Ida e volta","Ponto a ponto"];
+  $("rChips").innerHTML=chips.map(s=>`<button class="chip ${FILTER===s?"on":""}" data-s="${esc(s)}" onclick="setRouteFilter(this.dataset.s)">${esc(s)}</button>`).join("");
+  const q=QR.trim().toLowerCase();
+  const list=cl.filter(c=>(FILTER==="Todas"||(FILTER==="Frequentes"?c.items.length>1:c.type===FILTER))&&(!q||(rLabel(c.rep)+" "+c.rep.sport+" "+c.type).toLowerCase().includes(q)));
+  $("routeList").innerHTML=list.length?list.map(c=>{const a=c.rep;return `<div class="route" onclick="openAct('${a.id}')">
+    <div class="map">${thumb(a.pts,350,160)}<span class="rb"><i class="fa-solid ${iconOf(a.sport)}"></i> ${esc(c.type)}</span>${c.items.length>1?`<span class="rb2">${c.items.length}× feita</span>`:""}<span class="rd">${fk(a.dist,2)}<small>km</small></span></div>
+    <div class="info"><div style="min-width:0"><h3>${esc(rLabel(a))}</h3>
+      <div class="meta"><span><i class="fa-solid fa-trophy"></i> ${ft(c.best)}</span><span><i class="fa-solid fa-gauge"></i> ${fp(a.sec,a.dist)}/km</span><span><i class="fa-regular fa-calendar"></i> ${new Date(a.date).toLocaleDateString("pt-BR")}</span></div></div>
+      <button class="btn-s" onclick="event.stopPropagation();followRoute('${a.id}')">Seguir</button></div></div>`}).join("")
+   :`<div class="empty"><i class="fa-solid fa-route"></i>Suas rotas aparecem aqui automaticamente depois de gravar com GPS.</div>`;
+  autoName(cl.map(c=>c.rep).filter(a=>!RN[a.id]).slice(0,4));
+}
+function setRouteFilter(s){FILTER=s;renderRoutes()}
+$("rq").addEventListener("input",e=>{QR=e.target.value;renderRoutes()});
+function followRoute(id){
+  const a=A.find(x=>x.id===id);if(!a||a.pts.length<2)return;GUIDE=a.pts;go("gravar");
+  setTimeout(()=>{drawGuide();if(LM&&LGuide)LM.fitBounds(LGuide.getBounds(),{padding:[60,60]});follow=false},250);
+  toast("Rota guia ativada (linha azul tracejada)");
+}
+function drawGuide(){if(!LM||!window.L)return;if(LGuide){LM.removeLayer(LGuide);LGuide=null}if(GUIDE)LGuide=L.polyline(GUIDE,{color:"#4c9aff",weight:5,opacity:.9,dashArray:"9 11"}).addTo(LM)}
+
+let LM=null,LMark=null,LGlow=null,LLine=null,LArr=null,LTile=null,LGuide=null,LW=null,LFirst=true,follow=true,isSat=true,wDone=false,wake=null;
+function setTiles(){if(!LM)return;if(LTile)LM.removeLayer(LTile);LTile=L.tileLayer(isSat?SAT:TILE,{maxZoom:19}).addTo(LM);LTile.bringToBack();$("recscr").classList.toggle("sat",isSat)}
+function toggleLayer(){isSat=!isSat;setTiles()}
+function lmInit(){
+  if(window.L&&!LM){
+    LM=L.map("liveMap",{zoomControl:false,attributionControl:false}).setView(LAST_LL||[-15.78,-47.93],LAST_LL?16:4);setTiles();
+    LGlow=L.polyline([],{color:"#ff5a1f",weight:15,opacity:.28,lineCap:"round"}).addTo(LM);
+    LLine=L.polyline([],{color:"#ff7a2e",weight:5,opacity:1,lineCap:"round",lineJoin:"round"}).addTo(LM);
+    LArr=L.layerGroup().addTo(LM);LM.on("dragstart",()=>{follow=false});drawGuide();
+  }
+  if(LM){setTimeout(()=>LM.invalidateSize(),150);if(REC.on&&REC.pts.length){LGlow.setLatLngs(REC.pts);LLine.setLatLngs(REC.pts)}}
+}
+function startGPSWatch(){
+  if(!navigator.geolocation)return;
+  if(LW!==null)navigator.geolocation.clearWatch(LW);
+  LW=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:1000,timeout:25000});
+}
+function stopGPSWatch(){if(LW!==null&&navigator.geolocation){navigator.geolocation.clearWatch(LW);LW=null}}
+function lmStop(){if(!REC.on)stopGPSWatch()}
+function gpsErrorText(e){
+  if(e&&e.code===1)return "Permita a localização do RUNISCA no navegador e tente novamente.";
+  if(e&&e.code===2)return "O GPS não encontrou sinal. Ative a localização do celular e tente em local aberto.";
+  if(e&&e.code===3)return "O GPS demorou para responder. Deixe o celular com visão do céu e tente novamente.";
+  return "Não foi possível obter sua localização. Verifique as permissões do celular.";
+}
+function getGPSFix(options={}){return new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,maximumAge:0,timeout:25000,...options}))}
+function locateOneShot(){
+  if(!navigator.geolocation)return toast("Este navegador não disponibiliza GPS.");
+  if(window.isSecureContext===false&&!['localhost','127.0.0.1'].includes(location.hostname))return toast("O GPS do navegador exige que o aplicativo esteja publicado por HTTPS.");
+  toast("Buscando sua localização...");
+  getGPSFix().then(p=>{if(!REC.on)onPos(p);if(LM)LM.setView([p.coords.latitude,p.coords.longitude],17);toast("Localização encontrada.")}).catch(e=>toast(gpsErrorText(e)));
+}
+function recenter(){follow=true;if(LMark&&LM)LM.setView(LMark.getLatLng(),Math.max(LM.getZoom(),17));else locateOneShot()}
+function onPos(p){
+  const c=p.coords,ll=[c.latitude,c.longitude],a=c.accuracy;
+  if(LM){
+    if(!LMark)LMark=L.marker(ll,{icon:L.divIcon({className:"",html:'<div class="pulse"><i></i><b></b></div>',iconSize:[28,28],iconAnchor:[14,14]}),zIndexOffset:1000}).addTo(LM);else LMark.setLatLng(ll);
+    if(LFirst){LM.setView(ll,17);LFirst=false}else if(follow)LM.panTo(ll,{animate:true});
+  }
+  LAST_LL=ll;
+  const n=a<=10?5:a<=20?4:a<=35?3:a<=60?2:1;[...$("sig").children].forEach((e,i)=>e.classList.toggle("on",i<n));
+  if($("gpsLabel"))$("gpsLabel").textContent=a<=20?"GPS OK":"GPS";
+  if(!wDone&&navigator.onLine){wDone=true;weather(ll)}
+  if(REC.on&&useGps(REC.sport)){
+    const sp=c.speed;
+    if(P.auto_pause&&sp!=null){
+      if(!REC.paused){if(sp<.5){REC.slow=REC.slow||now();if(now()-REC.slow>8000)pauseNow(true)}else REC.slow=0}
+      else if(REC.auto&&sp>1.2)resumeNow();
+    }
+    if(!REC.paused)addPt(ll[0],ll[1],a,c.altitude,c.altitudeAccuracy);
+  }
+}
+let LAST_LL=null;
+function onPosErr(e){
+  [...$("sig").children].forEach(x=>x.classList.remove("on"));
+  if($("gpsLabel"))$("gpsLabel").textContent="GPS OFF";
+  if(e&&e.code===1){stopGPSWatch();if(REC.on&&!REC.paused)pauseNow(false);toast(gpsErrorText(e))}
+  else if(!REC.on)toast(gpsErrorText(e));
+}
+async function weather(ll){
+  try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+ll[0]+"&longitude="+ll[1]+"&current=temperature_2m,weather_code");
+    const j=await r.json(),c=j.current.weather_code;$("wTxt").textContent=Math.round(j.current.temperature_2m)+"°C";
+    $("wIco").className="fa-solid "+(c===0?"fa-sun":c<=3?"fa-cloud-sun":c<=48?"fa-smog":c<=67?"fa-cloud-rain":c<=77?"fa-snowflake":c<=82?"fa-cloud-showers-heavy":"fa-bolt")}catch{}
+}
+async function connectHR(){
+  if(!navigator.bluetooth){toast("Bluetooth não suportado neste navegador.");return}
+  try{const d=await navigator.bluetooth.requestDevice({filters:[{services:["heart_rate"]}]});
+    const s=await d.gatt.connect(),sv=await s.getPrimaryService("heart_rate"),ch=await sv.getCharacteristic("heart_rate_measurement");
+    await ch.startNotifications();ch.addEventListener("characteristicvaluechanged",e=>{const v=e.target.value;$("mHr").textContent=(v.getUint8(0)&1)?v.getUint16(1,true):v.getUint8(1)});
+    toast("Frequência cardíaca conectada")}catch{toast("Não foi possível conectar o sensor.")}
+}
+function recLock(){const l=$("recscr").classList.toggle("locked");$("lockI").className="fa-solid "+(l?"fa-lock-open":"fa-lock");toast(l?"Tela bloqueada. Toque no cadeado para liberar.":"Tela liberada")}
+async function downloadMap(){
+  if(!navigator.onLine)return toast("Conecte-se à internet para baixar o mapa.");
+  if(!("caches" in window)||!navigator.geolocation)return toast("Seu navegador não suporta mapa offline.");
+  toast("Obtendo sua localização...");
+  navigator.geolocation.getCurrentPosition(async p=>{
+    const c=await caches.open("runisca-tiles"),jobs=[],la=p.coords.latitude*Math.PI/180;
+    for(const z of [13,14,15,16,17]){const r=z>=16?2:3,x0=Math.floor((p.coords.longitude+180)/360*2**z),y0=Math.floor((1-Math.log(Math.tan(la)+1/Math.cos(la))/Math.PI)/2*2**z);
+      for(let x=x0-r;x<=x0+r;x++)for(let y=y0-r;y<=y0+r;y++)for(const T of [TILE,SAT])jobs.push(T.replace("{z}",z).replace("{x}",x).replace("{y}",y))}
+    let n=0;for(let i=0;i<jobs.length;i+=8){await Promise.all(jobs.slice(i,i+8).map(u=>fetch(u,{mode:"no-cors"}).then(r=>c.put(u,r)).then(()=>n++).catch(()=>{})));toast("Baixando mapa… "+Math.round((i+8)/jobs.length*100)+"%")}
+    toast("Mapa offline pronto ("+n+" blocos)");
+  },()=>toast("Permita a localização para baixar o mapa."),{timeout:15000});
+}
+
+function renderTiles(){
+  const q=($("sq").value||"").trim().toLowerCase();
+  const list=SPORTS.filter(s=>!q||s[0].toLowerCase().includes(q)||s[2].toLowerCase().includes(q));let html="",cat="";
+  list.forEach(s=>{if(s[2]!==cat){cat=s[2];html+=`<div class="cat">${esc(cat.toUpperCase())}</div>`}
+    html+=`<button class="tile ${sport===s[0]?"on":""}" data-s="${esc(s[0])}" onclick="pickSport(this.dataset.s)"><i class="fa-solid ${s[1]}"></i>${esc(s[0])}</button>`});
+  $("tiles").innerHTML=html||'<div class="empty" style="grid-column:1/-1">Nenhuma modalidade encontrada.</div>';
+  $("sportCount").textContent=SPORTS.length+" modalidades disponíveis";
+  $("sportLbl").textContent=(REC.on?REC.sport:sport).toUpperCase();$("sportIco").className="fa-solid "+iconOf(REC.on?REC.sport:sport);
+}
+$("sq").addEventListener("input",renderTiles);
+function pickSport(n){if(REC.on)return toast("Finalize a atividade para trocar a modalidade.");sport=n;renderTiles();closeSheet("sport")}
+
+const fresh=sp=>({on:false,paused:false,auto:false,t0:0,acc:0,dist:0,pts:[],sp:[],last:null,start:0,hist:[],arr:.15,sport:sp,gain:0,alt:null,hasAlt:false,laps:[],nextV:P.voice_every||1,lv:{t:0,d:0,pace:0},nextT:300,slow:0,lastAlert:0,lastSave:0});
+const REC=Object.assign({tid:null},fresh("Corrida"));
+const elapsed=()=>(REC.acc+(REC.on&&!REC.paused?now()-REC.t0:0))/1000;
+function addPt(la,lo,acc,alt,altAcc){
+  if(acc>30)return;const p=[la,lo],t=now();
+  if(alt!=null&&(altAcc==null||altAcc<=25)){REC.hasAlt=true;if(REC.alt==null)REC.alt=alt;else if(Math.abs(alt-REC.alt)>=3){if(alt>REC.alt)REC.gain+=alt-REC.alt;REC.alt=alt}}
+  if(REC.last){
+    const d=hav(REC.last.p,p);if(d<.003)return;const th=(t-REC.last.t)/3600000;if(th>0&&d/th>60)return;REC.dist+=d;
+    if(LArr&&REC.dist>=REC.arr){REC.arr+=.15;L.marker(p,{icon:L.divIcon({className:"",html:'<div class="arr" style="transform:rotate('+brg(REC.last.p,p)+'deg)"><i class="fa-solid fa-caret-up"></i></div>',iconSize:[14,14],iconAnchor:[7,7]}),interactive:false}).addTo(LArr)}
+  }
+  REC.pts.push(p);REC.last={p,t};REC.hist.push([t,REC.dist]);REC.hist=REC.hist.filter(h=>t-h[0]<=40000);
+  if(LGlow){LGlow.setLatLngs(REC.pts);LLine.setLatLngs(REC.pts)}
+  while(REC.dist>=REC.sp.length+1)REC.sp.push(elapsed());
+  while(REC.dist>=REC.nextV){announceKm(REC.nextV);REC.nextV=+(REC.nextV+(P.voice_every||1)).toFixed(3)}
+}
+function announceKm(k){
+  const t=elapsed(),dd=Math.max(.01,REC.dist-REC.lv.d),seg=(t-REC.lv.t)/dd,avg=t/Math.max(.01,REC.dist);
+  let s=(k===1?"Você completou 1 quilômetro. ":"Você completou "+kmTxt(k)+". ")+"Tempo total: "+sd(t)+". Ritmo do último trecho: "+sd(seg)+" por quilômetro";
+  if(REC.lv.pace){const df=seg-REC.lv.pace;if(Math.abs(df)>=3)s+=", "+sd(Math.abs(df))+(df<0?" mais rápido":" mais lento")+" que o anterior"}
+  s+=". Ritmo médio: "+sd(avg)+" por quilômetro.";
+  speak(s);REC.lv={t,d:REC.dist,pace:seg};
+}
+function curPace(){const h=REC.hist;if(h.length<2)return "—";const a=h[0],b=h[h.length-1],d=b[1]-a[1],s=(b[0]-a[0])/1000;return(d<.01||s<5)?"—":fp(s,d)}
+function paceSec(){const h=REC.hist;if(h.length<2)return 0;const a=h[0],b=h[h.length-1],d=b[1]-a[1],s=(b[0]-a[0])/1000;return(d<.01||s<5)?0:s/d}
+function mainBtn(){if(REC.on)recPause();else recStart()}
+function stopBtn(){REC.on?recStop():toast("Toque em ▶ para iniciar uma atividade.")}
+let gpsStarting=false;
+async function recStart(){
+  if(REC.on||gpsStarting)return;
+  const gps=useGps(sport);let firstFix=null;
+  if(gps){
+    if(!navigator.geolocation){toast("Este navegador não disponibiliza GPS.");return}
+    if(window.isSecureContext===false&&!['localhost','127.0.0.1'].includes(location.hostname)){
+      toast("Para usar o GPS do celular, abra o RUNISCA por um link HTTPS.");return;
+    }
+    gpsStarting=true;$("gpsLabel").textContent="BUSCANDO";$("recState").textContent="AGUARDANDO SINAL GPS...";
+    try{firstFix=await getGPSFix()}catch(e){gpsStarting=false;$("gpsLabel").textContent="GPS";$("recState").textContent="PRONTO PARA INICIAR";toast(gpsErrorText(e));return}
+    gpsStarting=false;
+  }
+  lmInit();
+  Object.assign(REC,fresh(sport),{on:true,t0:now(),start:now()});
+  if(LGlow){LGlow.setLatLngs([]);LLine.setLatLngs([]);LArr.clearLayers()}follow=true;LFirst=true;
+  if(gps&&firstFix){onPos(firstFix);startGPSWatch()}
+  clearInterval(REC.tid);REC.tid=setInterval(recTick,1000);
+  try{navigator.wakeLock?.request("screen").then(w=>wake=w).catch(()=>{})}catch{}
+  $("lvSport").textContent=sport.toUpperCase();$("lvIco").className="fa-solid "+iconOf(sport);$("lvSay").textContent="";
+  $("recscr").classList.remove("on");$("livescr").classList.add("on");
+  liveUI();recTick();updateMini();
+  speak("Atividade de "+sport.toLowerCase()+" iniciada. Boa, "+(P.name||"atleta").split(" ")[0]+"!",true);
+}
+function pauseNow(auto){if(!REC.on||REC.paused)return;REC.acc+=now()-REC.t0;REC.paused=true;REC.auto=!!auto;liveUI();speak(auto?"Pausa automática.":"Atividade pausada.",true)}
+function resumeNow(){if(!REC.on||!REC.paused)return;REC.paused=false;REC.auto=false;REC.t0=now();REC.last=null;REC.hist=[];REC.slow=0;liveUI();speak("Retomando.",true)}
+function recPause(){if(!REC.on)return;REC.paused?resumeNow():pauseNow(false)}
+function paintPanel(){
+  const on=REC.on,s=on?elapsed():0,gps=on?useGps(REC.sport):true,S=Math.round(s);
+  $("mKm").textContent=on&&gps?fk(REC.dist,2):on?"—":"0,00";$("mTm").textContent=ft(s);$("mPc").textContent=on&&gps?curPace():"—";
+  $("mEl").textContent=on&&REC.hasAlt?Math.round(REC.gain):"—";$("mKc").textContent=on?kcal(REC.dist):"0";
+  $("recClock").textContent=pad(Math.floor(S/3600))+":"+pad(Math.floor(S%3600/60))+":"+pad(S%60);
+  $("recState").textContent=!on?"PRONTO PARA INICIAR":REC.paused?(REC.auto?"PAUSA AUTOMÁTICA":"PAUSADO"):"EM ANDAMENTO";
+  $("pIcon").className="fa-solid "+(on&&!REC.paused?"fa-pause":"fa-play");
+  const goal=P.weekly_goal_km||20,wk=week(0).reduce((t,a)=>t+a.dist,0);$("recBar").style.width=Math.min(100,(wk+(on?REC.dist:0))/goal*100)+"%";
+  $("expBtn").style.display=on?"flex":"none";
+}
+function recTick(){
+  const gps=useGps(REC.sport),s=elapsed();
+  $("lvTime").textContent=ft(s);$("lvKm").textContent=gps?fk(REC.dist,2):"—";$("lvPace").textContent=gps?curPace():"—";
+  paintPanel();$("miT").textContent=ft(s)+(gps?" · "+fk(REC.dist,2)+" km":"");$("miIco").className="fa-solid "+iconOf(REC.sport)+" o";
+  if(!REC.on)return;
+  if(tab==="rotas"&&Math.round(s)%5===0)renderLiveCard();
+  if(REC.paused)return;
+  if(!gps&&s>=REC.nextT){speak("Tempo de atividade: "+sd(s)+".");REC.nextT+=300}
+  const tp=+P.target_pace||0;
+  if(gps&&tp&&s>30&&now()-REC.lastAlert>45000){const ps=paceSec();
+    if(ps){if(ps>tp+15){speak("Ritmo abaixo da meta. Acelere um pouco.");REC.lastAlert=now()}else if(ps<tp-15){speak("Você está acima do ritmo-alvo. Segure um pouco.");REC.lastAlert=now()}}}
+  if(now()-REC.lastSave>5000){REC.lastSave=now();
+    LS.set("runisca_rec",{sport:REC.sport,start:REC.start,el:s,dist:REC.dist,pts:REC.pts,sp:REC.sp,laps:REC.laps,gain:REC.gain,hasAlt:REC.hasAlt,nextV:REC.nextV,lv:REC.lv,savedAt:now(),uid:U?.id})}
+}
+function liveUI(){
+  const p=REC.paused;$("lvPlay").className="fa-solid "+(p?"fa-play":"fa-pause");
+  const st=$("lvState");st.textContent=p?(REC.auto?"PAUSA AUTO":"PAUSADO"):"EM ANDAMENTO";st.classList.toggle("paused",p);paintPanel();
+}
+function minimizeLive(){$("livescr").classList.remove("on");go("gravar");setTimeout(()=>{if(LM){LM.invalidateSize();if(REC.pts.length>1&&LLine)LM.fitBounds(LLine.getBounds(),{padding:[70,70]});follow=false}},250);toast("Mapa do percurso · toque em ⤢ para voltar")}
+function expandLive(){if(!REC.on)return;$("recscr").classList.remove("on");$("livescr").classList.add("on");updateMini()}
+function updateMini(){$("mini").classList.toggle("on",REC.on&&!$("livescr").classList.contains("on")&&!$("savescr").classList.contains("on")&&!$("recscr").classList.contains("on"))}
+function recStopTimers(){clearInterval(REC.tid);REC.tid=null;try{wake?.release()}catch{}wake=null}
+function addLap(){
+  if(!REC.on)return toast("Inicie a atividade para marcar voltas.");
+  const t=elapsed();REC.laps.push({n:REC.laps.length+1,t,d:REC.dist});speak("Volta "+REC.laps.length+". Tempo "+sd(t)+".");toast("🏁 Volta "+REC.laps.length+" marcada");closeSheet("special");
+}
+function shareLoc(){
+  const ll=LAST_LL;if(!ll)return toast("Ainda sem posição de GPS.");
+  const txt="Estou treinando (RUNISCA PRO). Minha localização: https://maps.google.com/?q="+ll[0].toFixed(6)+","+ll[1].toFixed(6);
+  if(navigator.share)navigator.share({text:txt}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>toast("Link da localização copiado"));
+}
+function recStop(){
+  if(!REC.on)return;
+  if(!REC.paused)REC.acc+=now()-REC.t0;
+  REC.paused=true;REC.on=false;recStopTimers();stopGPSWatch();LS.del("runisca_rec");
+  const sec=elapsed(),gps=useGps(REC.sport);
+  $("livescr").classList.remove("on");$("recscr").classList.remove("on");updateMini();
+  if(sec<3){discardReset();toast("Treino muito curto, descartado.");go("gravar");return}
+  speak("Atividade finalizada."+(gps?" Você percorreu "+fk(REC.dist,2)+" quilômetros em "+sd(sec)+", com ritmo médio de "+sd(sec/Math.max(.01,REC.dist))+" por quilômetro.":" Tempo total: "+sd(sec)+"."),true);
+  $("saveInfo").textContent=`${REC.sport} · ${ft(sec)}`+(gps?` · ${fk(REC.dist,2)} km · ${fp(sec,REC.dist)} /km · ${kcal(REC.dist)} kcal`+(REC.hasAlt?` · +${Math.round(REC.gain)} m`:""):" · sem GPS");
+  $("sSport").innerHTML=SPORTS.map(s=>`<option ${s[0]===REC.sport?"selected":""}>${esc(s[0])}</option>`).join("");
+  $("sDist").value=REC.dist>0?fk(REC.dist,2):"";
+  $("sTitle").value="";$("sNote").value="";$("sType").value="";$("sPlace").value="";$("sRpe").value=5;$("rpeV").textContent="5";
+  SV.photos=[];SV.feel="";renderFeel();renderPhotos();$("savescr").scrollTop=0;$("savescr").classList.add("on");
+}
+function checkRecover(){
+  const r=LS.get("runisca_rec",null);if(!r||REC.on||r.uid!==U?.id)return;
+  if(now()-r.savedAt>12*3600e3){LS.del("runisca_rec");return}
+  if(!confirm("Encontramos uma atividade de "+r.sport+" que foi interrompida ("+ft(r.el)+" · "+fk(r.dist,2)+" km). Deseja retomar?")){LS.del("runisca_rec");return}
+  sport=r.sport;lmInit();
+  Object.assign(REC,fresh(r.sport),{on:true,paused:true,acc:r.el*1000,start:r.start,dist:r.dist,pts:r.pts,sp:r.sp,laps:r.laps||[],gain:r.gain,hasAlt:r.hasAlt,nextV:r.nextV,lv:r.lv});
+  if(LGlow){LGlow.setLatLngs(REC.pts);LLine.setLatLngs(REC.pts)}
+  clearInterval(REC.tid);REC.tid=setInterval(recTick,1000);
+  $("lvSport").textContent=sport.toUpperCase();$("lvIco").className="fa-solid "+iconOf(sport);
+  $("livescr").classList.add("on");liveUI();recTick();toast("Atividade recuperada. Toque em ▶ para continuar.");
+}
+
+const SV={photos:[],feel:""};
+function renderFeel(){document.querySelectorAll("#feels .feel").forEach(b=>b.classList.toggle("on",b.dataset.f===SV.feel))}
+$("feels").addEventListener("click",e=>{const b=e.target.closest(".feel");if(!b)return;SV.feel=SV.feel===b.dataset.f?"":b.dataset.f;renderFeel()});
+$("sRpe").addEventListener("input",e=>{$("rpeV").textContent=e.target.value});
+function renderPhotos(){
+  $("photoGrid").innerHTML=SV.photos.map((src,i)=>`<div class="ph"><img src="${src}" alt="Foto ${i+1}"><button type="button" onclick="rmPhoto(${i})" aria-label="Remover"><i class="fa-solid fa-xmark"></i></button></div>`).join("")
+   +(SV.photos.length<4?'<div class="ph add" onclick="document.getElementById(\'photoIn\').click()"><i class="fa-solid fa-camera"></i></div>':"");
+}
+function rmPhoto(i){SV.photos.splice(i,1);renderPhotos()}
+function imgToData(file,max,q,square,cb){
+  const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
+    const c=document.createElement("canvas");
+    if(square){const s=Math.min(im.width,im.height);c.width=c.height=max;c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,max,max)}
+    else{const k=Math.min(1,max/Math.max(im.width,im.height));c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height)}
+    cb(c.toDataURL("image/jpeg",q))};im.src=r.result};r.readAsDataURL(file);
+}
+$("photoIn").addEventListener("change",e=>{[...e.target.files].slice(0,4-SV.photos.length).forEach(f=>imgToData(f,800,.7,false,d=>{if(SV.photos.length<4){SV.photos.push(d);renderPhotos()}}));e.target.value=""});
+
+async function saveAct(){
+  const spt=$("sSport").value||REC.sport;
+  const dist=+(parseFloat(String($("sDist").value).replace(",","."))||0).toFixed(3);
+  const route=cleanRoute(REC.pts);
+  const extra={type:$("sType").value,place:$("sPlace").value.trim(),feel:SV.feel,rpe:+$("sRpe").value,laps:REC.laps,gain:Math.round(REC.gain)};
+  const row={user_id:U.id,sport:spt,title:$("sTitle").value.trim()||spt,note:$("sNote").value.trim(),distance_km:dist,duration_sec:Math.round(elapsed()),splits_sec:REC.sp.map(Math.round),route,extra,started_at:new Date(REC.start||now()).toISOString()};
+  $("sBtn").disabled=true;let saved=null;
+  if(navigator.onLine){const r=await insertRow(row);if(!r.error)saved=r.data}
+  $("sBtn").disabled=false;
+  if(saved){LS.set("runisca_x_"+saved.id,extra);LS.set("runisca_ph_"+saved.id,SV.photos);A.unshift(fromRow(saved));toast("Treino salvo!")}
+  else{const id="loc_"+now();const q=queue();q.push({...row,id});
+    if(!LS.set("runisca_q",q)){toast("Sem espaço no aparelho para salvar.");return}
+    LS.set("runisca_x_"+id,extra);LS.set("runisca_ph_"+id,SV.photos);A.unshift(fromRow({...row,id,pending:true}));
+    toast(navigator.onLine?"Salvo no aparelho (banco indisponível). Será reenviado.":"📴 Salvo offline. Sincroniza quando voltar a internet.")}
+  A.sort((a,b)=>b.date-a.date);
+  $("savescr").classList.remove("on");discardReset();updateNet();go("inicio");checkAch(false);
+}
+function discardReset(){
+  Object.assign(REC,fresh(sport));
+  if(LLine){LGlow.setLatLngs([]);LLine.setLatLngs([]);LArr.clearLayers()}
+  recStopTimers();LS.del("runisca_rec");paintPanel();updateMini();
+}
+function discardAct(){if(confirm("Descartar este treino?")){$("savescr").classList.remove("on");discardReset();go("gravar")}}
+
+function exportGpx(a){
+  const pts=a.pts.map(p=>`<trkpt lat="${p[0]}" lon="${p[1]}"></trkpt>`).join("");
+  const x=`<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="RUNISCA PRO" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(a.title||a.sport)}</name><trkseg>${pts}</trkseg></trk></gpx>`;
+  const u=URL.createObjectURL(new Blob([x],{type:"application/gpx+xml"})),l=document.createElement("a");l.href=u;l.download="runisca-"+new Date(a.date).toISOString().slice(0,10)+".gpx";l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);
+}
+function openAct(id){
+  const a=A.find(x=>x.id===id);if(!a)return;const x=a.x||{},ph=getPhotos(id);
+  $("aDate").textContent=new Date(a.date).toLocaleString("pt-BR");$("aTitle").textContent=a.title||a.sport;
+  $("aStats").innerHTML=`<div class="kpi"><div class="lbl">KM</div><div class="big">${fk(a.dist,2)}</div></div><div class="kpi"><div class="lbl">TEMPO</div><div class="big">${ft(a.sec)}</div></div><div class="kpi"><div class="lbl">PACE</div><div class="big">${fp(a.sec,a.dist)}</div></div>`;
+  const sp=a.sp.map((v,i)=>v-(a.sp[i-1]||0)),mx=Math.max(1,...sp);
+  $("aSplits").innerHTML=sp.length?`<div class="lbl" style="margin:16px 0 8px">TEMPO POR KM</div><div class="bars">${sp.map((v,i)=>`<div><b style="height:${v/mx*100}%"></b>${i+1}</div>`).join("")}</div>`:"";
+  const times=a.pts.length>1?A.filter(b=>b.pts.length>1&&Math.abs(b.dist-a.dist)/Math.max(a.dist,.1)<.18&&(b===a||simKm(a,b)<.07)).length:0;
+  const ex=[a.sport,a.pts.length>1&&("🧭 "+classify(a)+(times>1?" · feita "+times+"×":"")),x.type,x.place&&("📍 "+x.place),x.feel,x.rpe&&("Esforço "+x.rpe+"/10"),x.gain&&("+"+x.gain+" m")].filter(Boolean).map(esc).join(" · ");
+  $("aExtra").innerHTML=ex;
+  $("aLaps").innerHTML=(x.laps&&x.laps.length)?"🏁 Voltas: "+x.laps.map(l=>l.n+"ª "+ft(l.t)+" ("+fk(l.d,2)+" km)").map(esc).join(" · "):"";
+  $("aPhotos").innerHTML=ph.map(s=>`<div class="ph"><img src="${s}" alt="Foto do treino"></div>`).join("");
+  $("aNote").textContent=a.note||"";$("aGpx").onclick=()=>a.pts.length>1?exportGpx(a):toast("Esta atividade não tem percurso GPS.");
+  $("aDel").onclick=async()=>{
+    if(!confirm("Excluir atividade?"))return;
+    if(String(id).startsWith("loc_")){LS.set("runisca_q",queue().filter(q=>q.id!==id))}
+    else{if(!navigator.onLine)return toast("Conecte-se à internet para excluir.");const {error}=await Q(sb.from("activities").delete().eq("id",id));if(error)return toast(error.message)}
+    LS.del("runisca_ph_"+id);LS.del("runisca_x_"+id);A=A.filter(x=>x.id!==id);closeSheet("act");renderAll();toast("Atividade excluída");
+  };
+  openSheet("act");
+  setTimeout(()=>{
+    if(!$("o-act").classList.contains("on")||!window.L)return;if(dMap){dMap.remove();dMap=null}
+    dMap=L.map("dmap",{zoomControl:false,attributionControl:false});L.tileLayer(TILE,{maxZoom:19}).addTo(dMap);
+    if(a.pts.length>1){const l=L.polyline(a.pts,{color:"#ff5a1f",weight:5}).addTo(dMap);dMap.fitBounds(l.getBounds(),{padding:[20,20]})}else dMap.setView([0,0],2);
+  },150);
+}
+
+function gTab(m){gMode=m;$("gt1").classList.toggle("on",m==="mine");$("gt2").classList.toggle("on",m==="all");renderGroups()}
+function renderGroups(){
+  const mine=new Set(GMEM.filter(m=>m.user_id===U.id).map(m=>m.group_id));
+  const list=gMode==="mine"?GROUPS.filter(g=>mine.has(g.id)):GROUPS;
+  $("groupList").innerHTML=list.length?list.map(g=>{const n=GMEM.filter(m=>m.group_id===g.id).length;
+    return `<div class="grp" onclick="openGroupSheet('${g.id}')"><div class="gimg"><i class="fa-solid fa-users"></i></div>
+    <div class="gi"><h4>${esc(g.name)}</h4><div class="sub">${n} membro${n===1?"":"s"}${mine.has(g.id)?" · Participando":""}</div><div class="sub">${esc(g.description||"Sem descrição")}</div></div><i class="fa-solid fa-chevron-right chev"></i></div>`}).join("")
+  :`<div class="empty"><i class="fa-solid fa-users"></i>${gMode==="mine"?"Você ainda não participa de grupos.":"Nenhum grupo criado ainda."}</div>`;
+}
+function openGroupSheet(id){
+  const g=GROUPS.find(x=>x.id===id);if(!g)return;curGroup=id;
+  const mem=GMEM.filter(m=>m.group_id===id),inG=mem.some(m=>m.user_id===U.id);
+  $("gsName").textContent=g.name;$("gsCount").textContent=mem.length+" membros";$("gsDesc").textContent=g.description||"Sem descrição";
+  const b=$("gsBtn");b.textContent=inG?"Sair do grupo":"Entrar no grupo";b.className=inG?"ghost":"grad";openSheet("gs");
+}
+async function toggleGroup(){
+  if(!navigator.onLine)return toast("Conecte-se à internet.");
+  const id=curGroup,inG=GMEM.some(m=>m.group_id===id&&m.user_id===U.id);
+  const r=inG?await Q(sb.from("group_members").delete().eq("group_id",id).eq("user_id",U.id)):await Q(sb.from("group_members").insert({group_id:id,user_id:U.id}));
+  if(r.error)return toast(missingTbl(r.error)?"Não foi possível atualizar sua participação no grupo.":msg(r.error));
+  await refreshGroups();openGroupSheet(id);toast(inG?"Você saiu do grupo":"Você entrou no grupo");checkAch(false);
+}
+async function createGroup(){
+  if(!navigator.onLine)return toast("Conecte-se à internet para criar um grupo.");
+  const name=$("gName").value.trim();if(name.length<2)return toast("Dê um nome ao grupo.");
+  const r=await Q(sb.from("groups").insert({name,description:$("gDesc").value.trim(),owner_id:U.id}).select().single());
+  if(r.error)return toast(missingTbl(r.error)?"Não foi possível criar o grupo agora. Tente novamente mais tarde.":msg(r.error));
+  const r2=await Q(sb.from("group_members").insert({group_id:r.data.id,user_id:U.id}));if(r2.error)return toast(r2.error.message);
+  $("gName").value="";$("gDesc").value="";closeSheet("gc");gMode="mine";await refreshGroups();gTab("mine");toast("Grupo criado!");
+}
+async function refreshGroups(){
+  const [g,m]=await Promise.all([Q(sb.from("groups").select("*").order("created_at",{ascending:false})),Q(sb.from("group_members").select("*"))]);
+  if(g.error||m.error)return toast("Não foi possível atualizar os grupos.");
+  GROUPS=g.data||[];GMEM=m.data||[];const c=LS.get("runisca_cache",{});c.groups=GROUPS;c.gmem=GMEM;LS.set("runisca_cache",c);renderGroups();renderProfile();
+}
+
+function openEdit(){$("eName").value=P.name;$("eBio").value=P.bio||"";tmpAvatar=P.avatar||"";paintEditAv();openSheet("edit")}
+function paintEditAv(){const e=$("eAv");if(tmpAvatar){e.style.backgroundImage='url("'+tmpAvatar+'")';e.textContent=""}else{e.style.backgroundImage="";e.textContent=initials($("eName").value||P.name)}}
+$("avIn").addEventListener("change",e=>{const f=e.target.files[0];if(f)imgToData(f,256,.8,true,d=>{tmpAvatar=d;paintEditAv()});e.target.value=""});
+function rmAvatar(){tmpAvatar="";paintEditAv()}
+function saveEdit(){
+  P.name=$("eName").value.trim()||"Atleta";P.bio=$("eBio").value.trim();P.avatar=tmpAvatar;
+  if(!LS.set("runisca_p_"+U.id,P))toast("Sem espaço para salvar a foto.");
+  pushProfile();closeSheet("edit");renderAll();toast("Perfil atualizado");
+}
+const LEVELS=[["INICIANTE",0],["CORREDOR",50],["AVANÇADO",150],["ELITE",400],["LENDA",1000]];
+const TIERS=[["Iniciante","#cd7f32"],["Média","#b8c2cc"],["Difícil","#f5c542"],["Épica","#4cc9f0"],["Lendária","#c15cff"]];
+function statsAll(){
+  const n=A.length,km=A.reduce((s,a)=>s+a.dist,0),maxD=Math.max(0,...A.map(a=>a.dist));
+  const d0=a=>{const x=new Date(a.date);x.setHours(0,0,0,0);return Math.round(x/864e5)};
+  const days=[...new Set(A.map(d0))].sort((a,b)=>a-b);let st=0,run=0,prev=null;days.forEach(d=>{run=prev!==null&&d-prev===1?run+1:1;prev=d;st=Math.max(st,run)});
+  const wk={};A.forEach(a=>{const k=Math.floor(a.date/(864e5*7));wk[k]=(wk[k]||0)+a.dist});
+  return{n,km,maxD,st,wk:Math.max(0,...Object.values(wk)),sports:new Set(A.map(a=>a.sport)).size,photos:A.filter(a=>getPhotos(a.id).length).length,
+    groups:GMEM.filter(m=>m.user_id===U?.id).length,early:A.some(a=>new Date(a.date).getHours()<6),
+    p5:A.some(a=>a.dist>=5&&a.sec/a.dist<=330),p45:A.some(a=>a.dist>=5&&a.sec/a.dist<=285),
+    tri:A.some(a=>/triatlo|ironman/i.test(a.sport)),h21:A.some(a=>a.dist>=21.1&&a.sec<=6300)};
+}
+function achList(){
+  const s=statsAll(),b=v=>v?1:0;
+  return[
+   ["first",0,"fa-shoe-prints","Primeiro passo","Salve sua 1ª atividade",s.n,1],["km5",0,"fa-road","Aquecendo","Some 5 km no total",s.km,5],["n5",0,"fa-calendar-check","Hábito nascendo","Faça 5 atividades",s.n,5],
+   ["d3",0,"fa-person-running","3 de uma vez","Uma atividade de 3 km",s.maxD,3],["photo",0,"fa-camera","Registro","Salve uma atividade com foto",s.photos,1],["grp",0,"fa-users","Em equipe","Entre em um grupo",s.groups,1],
+   ["d5",1,"fa-5","Cinco mil","Uma atividade de 5 km",s.maxD,5],["km50",1,"fa-road","50 na conta","Some 50 km no total",s.km,50],["n20",1,"fa-calendar-days","Constância","Faça 20 atividades",s.n,20],
+   ["st3",1,"fa-fire","Pegando fogo","3 dias seguidos treinando",s.st,3],["sp3",1,"fa-shapes","Multiesporte","Pratique 3 modalidades",s.sports,3],["early",1,"fa-sun","Madrugador","Treine antes das 6h",b(s.early),1],
+   ["d10",2,"fa-medal","10K","Uma atividade de 10 km",s.maxD,10],["km150",2,"fa-mountain-sun","150 km","Some 150 km no total",s.km,150],["n50",2,"fa-dumbbell","Disciplina","Faça 50 atividades",s.n,50],
+   ["st7",2,"fa-fire-flame-curved","Semana perfeita","7 dias seguidos",s.st,7],["wk40",2,"fa-chart-line","Semana de 40","40 km em uma semana",s.wk,40],["p5",2,"fa-bolt","Ritmo forte","5 km a 5:30/km ou menos",b(s.p5),1],
+   ["d21",3,"fa-trophy","Meia maratona","Uma atividade de 21,1 km",s.maxD,21.1],["km500",3,"fa-earth-americas","500 km","Some 500 km no total",s.km,500],["n100",3,"fa-hundred-points","Centurião","Faça 100 atividades",s.n,100],
+   ["st14",3,"fa-fire-flame-simple","Duas semanas","14 dias seguidos",s.st,14],["p45",3,"fa-gauge-high","Foguete","5 km abaixo de 4:45/km",b(s.p45),1],["sp6",3,"fa-layer-group","Atleta completo","Pratique 6 modalidades",s.sports,6],
+   ["d42",4,"fa-crown","Maratonista","Uma atividade de 42,2 km",s.maxD,42.2],["km1000",4,"fa-infinity","1.000 km","Some 1.000 km no total",s.km,1000],["n365",4,"fa-gem","Um ano de treino","Faça 365 atividades",s.n,365],
+   ["st30",4,"fa-dragon","Imparável","30 dias seguidos",s.st,30],["tri",4,"fa-medal","Triatleta","Registre um Triatlo ou Ironman",b(s.tri),1],["h21",4,"fa-hourglass-half","Meia sub 1h45","Meia maratona em até 1h45",b(s.h21),1]
+  ].map(([id,t,ic,ti,de,cur,tg])=>({id,t,ic,ti,de,cur,tg,ok:cur>=tg}));
+}
+function checkAch(silent){
+  if(!U)return;const key="runisca_ach_"+U.id,old=LS.get(key,null),list=achList(),now_=list.filter(a=>a.ok).map(a=>a.id);
+  if(old&&!silent){const nw=list.filter(a=>a.ok&&!old.includes(a.id));nw.forEach((a,i)=>setTimeout(()=>{toast("🏆 Conquista desbloqueada: "+a.ti+" ("+TIERS[a.t][0]+")");speak("Conquista desbloqueada: "+a.ti+".")},1500+i*3200))}
+  LS.set(key,now_);
+}
+function achFilter(f){ACHF=f;renderProfile()}
+function renderProfile(){
+  $("pName").textContent=P.name;paintAvatar($("pAv"));$("pBio").textContent=P.bio||"Toque no lápis para adicionar sua bio.";
+  $("pHandle").textContent="@"+(U?.email||"").split("@")[0];
+  const tot=A.reduce((s,a)=>s+a.dist,0);$("pCount").textContent=A.length;$("pKm").textContent=fk(tot,0);$("pGroups").textContent=GMEM.filter(m=>m.user_id===U.id).length;
+  let li=0;LEVELS.forEach((l,i)=>{if(tot>=l[1])li=i});const nx=LEVELS[li+1];
+  $("lvName").textContent=LEVELS[li][0];$("lvNext").textContent=nx?fk(nx[1]-tot,0)+" km para "+nx[0]:"Nível máximo!";
+  $("xpBar").style.width=(nx?(tot-LEVELS[li][1])/(nx[1]-LEVELS[li][1])*100:100)+"%";
+  const maxD=Math.max(0,...A.map(a=>a.dist)),paces=A.filter(a=>a.dist>=1&&a.sec>0).map(a=>a.sec/a.dist),best=paces.length?Math.min(...paces):0;
+  $("prs").innerHTML=`<div class="kpi"><div class="lbl">MAIOR DIST.</div><div class="big">${fk(maxD)}<small>km</small></div></div><div class="kpi"><div class="lbl">MELHOR PACE</div><div class="big">${best?fp(best,1):"—"}</div></div><div class="kpi"><div class="lbl">TEMPO TOTAL</div><div class="big">${fk(A.reduce((s,a)=>s+a.sec,0)/3600)}<small>h</small></div></div>`;
+  const L_=achList(),done=L_.filter(a=>a.ok).length;$("achCount").textContent=done+" / "+L_.length;
+  $("achChips").innerHTML=["Todas",...TIERS.map(t=>t[0])].map(f=>`<button class="chip ${ACHF===f?"on":""}" onclick="achFilter('${f}')">${f}</button>`).join("");
+  let html="";
+  TIERS.forEach(([nm,col],ti)=>{
+    if(ACHF!=="Todas"&&ACHF!==nm)return;const g=L_.filter(a=>a.t===ti);
+    html+=`<div class="tierh" style="color:${col}"><span>${nm.toUpperCase()}</span><span class="sub">${g.filter(a=>a.ok).length}/${g.length}</span></div>`;
+    html+=g.map(a=>{const p=Math.min(100,a.cur/a.tg*100);return `<div class="ach ${a.ok?"on":""}" style="--tc:${col}"><div class="ic"><i class="fa-solid ${a.ic}"></i></div><div class="am"><b>${esc(a.ti)}</b><div class="sub">${esc(a.de)}${a.ok?"":" · "+(a.tg>1?fk(Math.min(a.cur,a.tg),a.tg%1?1:0)+"/"+fk(a.tg,a.tg%1?1:0):"")}</div><div class="pg"><i style="width:${p}%"></i></div></div>${a.ok?'<i class="fa-solid fa-circle-check" style="color:'+col+'"></i>':""}</div>`}).join("");
+  });
+  $("achList").innerHTML=html;
+}
+
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;$("instBtn").style.display="flex"});
+async function installApp(){if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;$("instBtn").style.display="none"}
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+renderTiles();updateNet();
+</script>
+</body>
+</html>
